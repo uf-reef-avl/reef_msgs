@@ -73,6 +73,7 @@ Eigen::Matrix3d quaternion_to_rotation_321(Eigen::Quaterniond q)
   Eigen::Matrix3d rotation_matrix = I - 2 * q.w() * skew_mat + 2 * skew_mat * skew_mat;
   return rotation_matrix;
 }
+
 Eigen::Matrix3d quaternion_to_rotation_321(geometry_msgs::Quaternion q)
 {
   Eigen::Quaterniond q_temp;
@@ -103,6 +104,75 @@ void yaw_from_rotation(Eigen::Matrix3d C, double& yaw)
   yaw =  atan2(C(0,1),C(0,0));
 }
 
+Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
+{
+  Eigen::Matrix4d omega;
+  omega.block<3,3>(0,0) = -skew(pqr);
+  omega.block<3,1>(0,3) = pqr;
+  omega.block<1,3>(3,0) = -pqr.transpose();
+  omega(3,3) = 0;
+  return omega;
+}
 
+Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q)
+{
+  double px = p(0,0);
+  double py = p(1,0);
+  double pz = p(2,0);
+  double pw = p(3,0);
+
+  Eigen::Matrix<double,4,4> p_matrix;
+  p_matrix << pw, -pz,  py,  px, \
+              pz,  pw, -px,  py, \
+             -py,  px,  pw,  pz, \
+             -px, -py, -pz,  pw;
+  return p_matrix*q;
+}
+
+Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q)
+{
+  Eigen::Matrix<double,4,1> p_temp;
+  Eigen::Matrix<double,4,1> q_temp;
+  Eigen::Matrix<double,4,1> multiplicant;
+
+  p_temp = quat2vector(p);
+  q_temp = quat2vector(q);
+
+  multiplicant = quaternionMultiplication(p_temp,q_temp);
+
+  return vector2quat(multiplicant);
+
+}
+
+Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in)
+{
+  Eigen::Quaterniond q_out;
+  q_out.x() = mat_in(0,0);
+  q_out.y() = mat_in(1,0);
+  q_out.z() = mat_in(2,0);
+  q_out.w() = mat_in(3,0);
+
+  return q_out;
+}
+
+Eigen::Matrix<double, 4,1> quat2vector(Eigen::Quaterniond q_in)
+{
+  Eigen::Matrix<double, 4,1> mat_out;
+  mat_out(0,0) = q_in.x();
+  mat_out(1,0) = q_in.y();
+  mat_out(2,0) = q_in.z();
+  mat_out(3,0) = q_in.w();
+
+  return mat_out;
+}
+
+Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu)
+{
+  Eigen::Quaterniond q(0,1,0,0); // w,x,y,z
+  Eigen::Affine3d nwu_to_ned_dcm;
+  nwu_to_ned_dcm.linear() = q.toRotationMatrix();
+  Eigen::Affine3d ned = nwu_to_ned_dcm.inverse() *  nwu * nwu_to_ned_dcm;
+  return ned;
+}
 
 }

@@ -38,7 +38,7 @@ void vectorToDiagMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec
 }
 
 template <class Derived>
-void importMatrixFromParamServer(ros::NodeHandle nh, Eigen::MatrixBase<Derived>& mat, std::string param)
+void importMatrixFromParamServer(const ros::NodeHandle nh, Eigen::MatrixBase<Derived>& mat, std::string param)
 {
   std::vector<double> vec;
   if(!nh.getParam(param, vec))
@@ -67,9 +67,6 @@ bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec);
 bool loadTransform(std::string ns, Eigen::Affine3d &out);
 bool loadTransform(std::string ns, Eigen::Matrix4d &out);
 bool loadTransform(std::string ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
-Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu);
-
-
 }
 
 

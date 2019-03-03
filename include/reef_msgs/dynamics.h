@@ -30,6 +30,14 @@ Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double roll, double p
 void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, double& yaw, double& roll, double& pitch );
 void yaw_from_rotation(Eigen::Matrix3d C, double& yaw);
 
+Eigen::Matrix4d Omega(Eigen::Vector3d pqr);
+Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q);
+Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q);
+Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in);
+Eigen::Matrix<double, 4,1> quat2vector(Eigen::Quaterniond q_in);
+
+Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu);
+
 inline double getYaw(Eigen::Quaterniond q)
   {
     return std::atan2(2.0*(q.w()*q.z()+q.x()*q.y()), 1.0-2.0*(q.y()*q.y() + q.z()*q.z()));

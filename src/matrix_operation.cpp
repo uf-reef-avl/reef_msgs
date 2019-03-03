@@ -11,20 +11,16 @@ bool loadTransform(std::string ns, Eigen::Affine3d &out)
 {
   ros::NodeHandle nh(ns);
   Eigen::Quaterniond rotation;
-  double qx, qy, qz, qw, tx, ty, tz;
-  if( nh.getParam("tx", tx) &&
-      nh.getParam("ty", ty) &&
-      nh.getParam("tz", tz) &&
-      nh.getParam("qx", qx) &&
-      nh.getParam("qy", qy) &&
-      nh.getParam("qz", qz) &&
-      nh.getParam("qw", qw))
+  Eigen::Vector3d translation;
+  if( nh.getParam("tx", translation(0)) &&
+      nh.getParam("ty", translation(1)) &&
+      nh.getParam("tz", translation(2)) &&
+      nh.getParam("qx", rotation.x()) &&
+      nh.getParam("qy", rotation.y()) &&
+      nh.getParam("qz", rotation.z()) &&
+      nh.getParam("qw", rotation.w()))
   {
-    rotation.w() = qw;
-    rotation.x() = qx;
-    rotation.y() = qy;
-    rotation.z() = qz;
-    out.translation() = Eigen::Vector3d(tx,ty,tz);
+    out.translation() = translation;
     out.linear() = rotation.toRotationMatrix();
     return true;
   }
@@ -40,21 +36,17 @@ bool loadTransform(std::string ns, Eigen::Matrix4d &out)
 {
   ros::NodeHandle nh(ns);
   Eigen::Quaterniond rotation;
-  double qx, qy, qz, qw, tx, ty, tz;
-  if( nh.getParam("tx", tx) &&
-      nh.getParam("ty", ty) &&
-      nh.getParam("tz", tz) &&
-      nh.getParam("qx", qx) &&
-      nh.getParam("qy", qy) &&
-      nh.getParam("qz", qz) &&
-      nh.getParam("qw", qw))
+  Eigen::Vector3d translation;
+  if( nh.getParam("tx", translation(0)) &&
+      nh.getParam("ty", translation(1)) &&
+      nh.getParam("tz", translation(2)) &&
+      nh.getParam("qx", rotation.x()) &&
+      nh.getParam("qy", rotation.y()) &&
+      nh.getParam("qz", rotation.z()) &&
+      nh.getParam("qw", rotation.w()))
   {
-    rotation.w() = qw;
-    rotation.x() = qx;
-    rotation.y() = qy;
-    rotation.z() = qz;
     out.block<3,3>(0,0) = rotation.toRotationMatrix();
-    out.block<3,1>(0,3) = Eigen::Vector3d(tx,ty,tz);
+    out.block<3,1>(0,3) = translation;
     out(3,3) = 1;
     return true;
   }
@@ -64,17 +56,6 @@ bool loadTransform(std::string ns, Eigen::Matrix4d &out)
     out.block<3,3>(0,0) = Eigen::Matrix3d::Identity();
     return false;
   }
-}
-
-
-
-Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu)
-{
-  Eigen::Quaterniond q(0,1,0,0);
-  Eigen::Affine3d nwu_to_ned_dcm;
-  nwu_to_ned_dcm.linear() = q.toRotationMatrix();
-  Eigen::Affine3d ned = nwu_to_ned_dcm.inverse() *  nwu * nwu_to_ned_dcm;
-  return ned;
 }
 
 bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec)
@@ -87,20 +68,14 @@ bool loadTransform(std::string ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond 
 {
   ros::NodeHandle nh(ns);
   double qx, qy, qz, qw, tx, ty, tz;
-  if( nh.getParam("tx", tx) &&
-      nh.getParam("ty", ty) &&
-      nh.getParam("tz", tz) &&
-      nh.getParam("qx", qx) &&
-      nh.getParam("qy", qy) &&
-      nh.getParam("qz", qz) &&
-      nh.getParam("qw", qw))
+  if( nh.getParam("tx", out_vec(0)) &&
+      nh.getParam("ty", out_vec(1)) &&
+      nh.getParam("tz", out_vec(2)) &&
+      nh.getParam("qx", out_quat.x()) &&
+      nh.getParam("qy", out_quat.y()) &&
+      nh.getParam("qz", out_quat.z()) &&
+      nh.getParam("qw", out_quat.w()))
   {
-    out_quat.w() = qw;
-    out_quat.x() = qx;
-    out_quat.y() = qy;
-    out_quat.z() = qz;
-
-    out_vec = Eigen::Vector3d(tx,ty,tz);
     return true;
   }
   else
