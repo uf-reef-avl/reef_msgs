@@ -26,8 +26,8 @@ Eigen::Matrix3d quaternion_to_rotation_321(Eigen::Quaterniond q);
 Eigen::Matrix3d quaternion_to_rotation_321(geometry_msgs::Quaternion q);
 
 Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double roll, double pitch);
-
 void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, double& yaw, double& roll, double& pitch );
+void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, Eigen::Vector3d &rpy);
 void yaw_from_rotation(Eigen::Matrix3d C, double& yaw);
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr);

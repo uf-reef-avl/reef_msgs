@@ -85,7 +85,7 @@ Eigen::Matrix3d quaternion_to_rotation_321(geometry_msgs::Quaternion q)
   return quaternion_to_rotation_321(q_temp);
 }
 
-Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double roll, double pitch)
+Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double pitch, double roll)
 {
   Eigen::Quaterniond q;
   quaternion_from_roll_pitch_yaw(pitch, roll, yaw, q);
@@ -94,9 +94,15 @@ Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double roll, double p
 
 void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, double& yaw, double& roll, double& pitch )
 {
-  pitch = -asin(C(0,2));
+  pitch = -asin(C(1,2));
   roll =  atan2(C(0,2),C(2,2));
   yaw =  atan2(C(0,1),C(0,0));
+}
+
+void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, Eigen::Vector3d &ypr){
+  ypr(2) = atan2(C(1,2),C(2,2));
+  ypr(1) = -asin(C(0,2));
+  ypr(0) = atan2(C(0,1),C(0,0));
 }
 
 void yaw_from_rotation(Eigen::Matrix3d C, double& yaw)
@@ -116,17 +122,19 @@ Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
 
 Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q)
 {
-  double px = p(0,0);
-  double py = p(1,0);
-  double pz = p(2,0);
   double pw = p(3,0);
 
-  Eigen::Matrix<double,4,4> p_matrix;
-  p_matrix << pw, -pz,  py,  px, \
-              pz,  pw, -px,  py, \
-             -py,  px,  pw,  pz, \
-             -px, -py, -pz,  pw;
-  return p_matrix*q;
+  Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
+  Eigen::Matrix3d p_skew;
+  p_skew = skew(p.head(3));
+
+  Eigen::Matrix4d A;
+  A.block<3,3>(0,0) = pw * I * p_skew;
+  A.block<4,1>(0,3) = p;
+  A.block<1,4>(3,0) = -p.transpose();
+  A(3,3) = pw;
+
+  return A*q;
 }
 
 Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q)
@@ -143,6 +151,7 @@ Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quater
   return vector2quat(multiplicant);
 
 }
+
 
 Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in)
 {
