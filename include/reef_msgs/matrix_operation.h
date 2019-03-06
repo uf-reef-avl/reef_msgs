@@ -63,6 +63,30 @@ void importMatrixFromParamServer(const ros::NodeHandle nh, Eigen::MatrixBase<Der
   }
 }
 
+template <class Derived, std::size_t N>
+bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, boost::array<double,N> &vec)
+{
+  ROS_ASSERT(vec.size() == mat.rows()*mat.cols());
+  if(vec.size() != mat.rows()*mat.cols())
+    return false;
+  for(size_t i=0; i < mat.rows(); i++)
+  {
+    for(size_t j=0; j < mat.cols(); j++)
+    {
+      vec[mat.cols()*i+j] = mat(i,j);
+    }
+  }
+  return true;
+}
+
+template <class Derived>
+void verifyDimensions(const Eigen::MatrixBase<Derived> &mat, std::string name, int rows, int cols)
+{
+  ROS_ASSERT_MSG( mat.rows() == rows &&  mat.cols() == cols ,
+                  "%s is %dx%d. Expecting %dx%d",name.c_str(),(int) mat.rows(), (int) mat.cols(),rows,cols);
+}
+
+
 bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec);
 bool loadTransform(std::string ns, Eigen::Affine3d &out);
 bool loadTransform(std::string ns, Eigen::Matrix4d &out);

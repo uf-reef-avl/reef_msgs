@@ -22,6 +22,8 @@ add_message_files(
         ZDebugEstimate.msg
         XYZEstimate.msg
         XYZDebugEstimate.msg
+        SyncVerifyEstimates.msg
+        SyncEstimateError.msg
 )
 
 generate_messages(

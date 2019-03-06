@@ -64,17 +64,18 @@ void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geomet
   q.z = quat_mat(3);
 }
 
-Eigen::Matrix3d quaternion_to_rotation_321(Eigen::Quaterniond q)
+Eigen::Matrix3d quaternion_to_rotation(Eigen::Quaterniond q)
 {
   Eigen::Matrix3d I;
   I.setIdentity();
 
   Eigen::Matrix3d skew_mat = skew(Eigen::Vector3d(q.x(), q.y(), q.z()));
   Eigen::Matrix3d rotation_matrix = I - 2 * q.w() * skew_mat + 2 * skew_mat * skew_mat;
+
   return rotation_matrix;
 }
 
-Eigen::Matrix3d quaternion_to_rotation_321(geometry_msgs::Quaternion q)
+Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q)
 {
   Eigen::Quaterniond q_temp;
   q_temp.x() = q.x;
@@ -82,32 +83,27 @@ Eigen::Matrix3d quaternion_to_rotation_321(geometry_msgs::Quaternion q)
   q_temp.z() = q.z;
   q_temp.w() = q.w;
 
-  return quaternion_to_rotation_321(q_temp);
+  return quaternion_to_rotation(q_temp);
 }
 
-Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double yaw, double pitch, double roll)
+Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double yaw)
 {
   Eigen::Quaterniond q;
-  quaternion_from_roll_pitch_yaw(pitch, roll, yaw, q);
-  return quaternion_to_rotation_321(q);
+  quaternion_from_roll_pitch_yaw(roll,pitch, yaw, q);
+  return quaternion_to_rotation(q);
 }
 
-void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, double& yaw, double& roll, double& pitch )
+void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pitch, double& yaw)
 {
-  pitch = -asin(C(1,2));
-  roll =  atan2(C(0,2),C(2,2));
+  roll =  atan2(C(1,2),C(2,2));
+  pitch = -asin(C(0,2));
   yaw =  atan2(C(0,1),C(0,0));
 }
 
-void roll_pitch_yaw_from_rotation(Eigen::Matrix3d C, Eigen::Vector3d &ypr){
-  ypr(2) = atan2(C(1,2),C(2,2));
-  ypr(1) = -asin(C(0,2));
-  ypr(0) = atan2(C(0,1),C(0,0));
-}
-
-void yaw_from_rotation(Eigen::Matrix3d C, double& yaw)
-{
-  yaw =  atan2(C(0,1),C(0,0));
+void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy){
+  rpy(0) = atan2(C(1,2),C(2,2));
+  rpy(1) = -asin(C(0,2));
+  rpy(2) = atan2(C(0,1),C(0,0));
 }
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
