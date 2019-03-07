@@ -15,6 +15,8 @@ find_package(Eigen3 REQUIRED)
 
 add_message_files(
         FILES
+        DesiredVector.msg
+        DesiredState.msg
         DeltaToVel.msg
         XYEstimate.msg
         XYDebugEstimate.msg
