@@ -14,3 +14,4 @@ bool attitude_valid
 bool position_valid
 bool velocity_valid
 bool acceleration_valid
+bool altitude_only
