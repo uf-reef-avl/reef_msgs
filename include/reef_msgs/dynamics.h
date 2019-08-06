@@ -40,6 +40,12 @@ Eigen::Matrix<double, 4,1> quat2vector(Eigen::Quaterniond q_in);
 
 Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu);
 
+inline Eigen::Vector3d unSkew(const Eigen::Matrix3d& skew_matrix){
+    Eigen::Vector3d vec;
+    vec << -skew_matrix(1,2) , skew_matrix(0,2), -skew_matrix(0,1);
+    return vec;
+}
+
 inline void get_yaw(Eigen::Matrix3d C, double& yaw){
   yaw =  atan2(C(0,1),C(0,0));
 }
