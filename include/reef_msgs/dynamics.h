@@ -78,7 +78,8 @@ inline double pi2pi(double angle)
             return_angle = angle - 2 * M_PI;
         if(angle < -M_PI)
             return_angle = angle + 2 * M_PI;
-    }
+    } else
+        return_angle = angle;
     return return_angle;
 }
 
