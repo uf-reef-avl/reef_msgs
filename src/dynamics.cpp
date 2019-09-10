@@ -95,15 +95,15 @@ Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double
 
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pitch, double& yaw)
 {
-  roll =  atan2(C(1,2),C(2,2));
-  pitch = -asin(C(0,2));
-  yaw =  atan2(C(0,1),C(0,0));
+  roll =  atan2(C(1,2),C(2,2));//roll
+  pitch = -asin(C(0,2)); //pitch
+  yaw =  atan2(C(0,1),C(0,0)); //yaw
 }
 
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy){
-  rpy(0) = atan2(C(1,2),C(2,2));
-  rpy(1) = -asin(C(0,2));
-  rpy(2) = atan2(C(0,1),C(0,0));
+  rpy(0) = atan2(C(1,2),C(2,2)); //roll
+  rpy(1) = -asin(C(0,2)); // pitch
+  rpy(2) = atan2(C(0,1),C(0,0)); // pitch
 }
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
@@ -178,6 +178,21 @@ Eigen::Affine3d convertNWU2NED(const Eigen::Affine3d& nwu)
   nwu_to_ned_dcm.linear() = q.toRotationMatrix();
   Eigen::Affine3d ned = nwu_to_ned_dcm.inverse() *  nwu * nwu_to_ned_dcm;
   return ned;
+}
+
+Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy)
+{
+    double roll = rpy(0);
+    double pitch = rpy(1);
+    double yaw = rpy(2);
+
+    Eigen::Matrix3d C3, C2, C1;
+
+    C3 << cos(yaw), sin(yaw), 0,  -sin(yaw), cos(yaw), 0, 0,0,1;
+    C2 << cos(pitch),0, -sin(pitch), 0, 1, 0,sin(pitch), 0,cos(pitch);
+    C1 << 1, 0, 0, 0, cos(roll), sin(roll), 0, -sin(roll), cos(roll);
+
+    return C1*C2*C3;
 }
 
 }
