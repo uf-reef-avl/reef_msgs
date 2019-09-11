@@ -70,5 +70,19 @@ inline Eigen::Matrix3d skew(const Eigen::Vector3d& vec)
   return skew;
 }
 
+inline double pi2pi(double angle)
+{
+    double return_angle;
+    if(std::abs(angle - M_PI ) > 0.001)
+    {
+        if(angle > M_PI)
+            return_angle = angle - 2 * M_PI;
+        if(angle < -M_PI)
+            return_angle = angle + 2 * M_PI;
+    } else
+        return_angle = angle;
+    return return_angle;
+}
+
 }
 #endif //PROJECT_DYNAMICS_H
