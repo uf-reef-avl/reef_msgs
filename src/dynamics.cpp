@@ -133,6 +133,31 @@ Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,E
   return A*q;
 }
 
+Eigen::Quaterniond quatMult(Eigen::Quaterniond q , Eigen::Quaterniond p)
+{
+
+    Eigen::Vector4d p_eigen;
+    p_eigen = p.coeffs();
+    Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
+    Eigen::Matrix3d q_skew;
+    q_skew = skew(q.vec());
+
+    Eigen::Matrix4d A;
+    A.block<3,3>(0,0) = q.w() * I - q_skew;
+    A.block<3,1>(0,3) = q.vec();
+    A.block<1,3>(3,0) = -q.vec();
+    A(3,3) = q.w();
+    Eigen::Vector4d qp;
+    qp = A*p_eigen;
+  Eigen::Quaterniond q_times_p;
+    q_times_p.vec() << qp(0),qp(1),qp(2);
+    q_times_p.w() = qp(3);
+  return q_times_p;
+}
+
+
+
+
 Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q)
 {
   Eigen::Matrix<double,4,1> p_temp;
