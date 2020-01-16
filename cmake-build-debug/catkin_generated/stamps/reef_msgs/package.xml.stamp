@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>reef_msgs</name>
+  <version>1.0.0</version>
+  <description>The reef_msgs package</description>
+  <maintainer email="prashant.ganehs@ufl.edu">Prashant Ganesh</maintainer>
+
+
+  <license>TODO</license>
+
+
+  <doc_depend>doxygen</doc_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>geometry_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>tf2_eigen</depend>
+  <depend>message_generation</depend>
+  <depend>message_runtime</depend>
+
+  <export>
+
+  </export>
+</package>

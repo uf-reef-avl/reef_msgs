@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/humberto/catkin_ws/src/reef_msgs/cmake-build-debug/devel/setup.sh

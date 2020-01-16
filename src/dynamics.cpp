@@ -103,7 +103,7 @@ void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pi
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy){
   rpy(0) = atan2(C(1,2),C(2,2)); //roll
   rpy(1) = -asin(C(0,2)); // pitch
-  rpy(2) = atan2(C(0,1),C(0,0)); // pitch
+  rpy(2) = atan2(C(0,1),C(0,0)); // yaw
 }
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
