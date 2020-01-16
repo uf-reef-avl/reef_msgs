@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: reef_msgs
-Description: Description of reef_msgs
-Version: 1.0.0
-Cflags: -I/usr/local/include
-Libs: -L/usr/local/lib -lreef_msgs
-Requires: roscpp rospy geometry_msgs std_msgs message_runtime
