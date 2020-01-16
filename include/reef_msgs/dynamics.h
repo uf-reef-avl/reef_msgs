@@ -84,5 +84,30 @@ inline double pi2pi(double angle)
     return return_angle;
 }
 
+//inline Eigen::Quaterniond rodrigues2quaternion(double rx, double ry, double rz){
+//    Eigen::Quaterniond quat;
+//    quat.w() = 1/sqrt(1+rx*rx);
+//    quat.x() = rx*rx;
+//    quat.y() = ry*rx;
+//    quat.z() = rz*rx;
+//    return quat;
+//}
+
+inline Eigen::Affine3d NWU2NED_Affine(Eigen::Affine3d& in){
+    Eigen::Affine3d out;
+
+    Eigen::Quaterniond q(in.linear());
+    Eigen::Quaterniond q_temp(q.w(), q.x(), -q.y(), -q.z());
+
+    out.linear() = q_temp.toRotationMatrix();
+    out.translation() << in.translation()(0), -in.translation()(1), -in.translation()(2);
+
+//    Eigen::Quaterniond q(0,1,0,0);
+//    out.translation() = q.toRotationMatrix() * in.translation();
+//    out.linear() = q.toRotationMatrix() * in.linear();
+    return out;
+}
+
+
 }
 #endif //PROJECT_DYNAMICS_H
