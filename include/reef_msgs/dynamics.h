@@ -35,6 +35,7 @@ Eigen::Matrix4d Omega(Eigen::Vector3d pqr);
 
 Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q);
 Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q);
+Eigen::Quaterniond quatMult(Eigen::Quaterniond q , Eigen::Quaterniond p);
 
 Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in);
 Eigen::Matrix<double, 4,1> quat2vector(Eigen::Quaterniond q_in);
