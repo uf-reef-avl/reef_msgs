@@ -38,7 +38,7 @@ catkin_package(
         INCLUDE_DIRS include
         LIBRARIES ${PROJECT_NAME}
         CATKIN_DEPENDS roscpp rospy geometry_msgs std_msgs message_runtime
-        DEPENDS eigen
+        DEPENDS EIGEN3
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS}
@@ -48,9 +48,14 @@ add_library(reef_msgs
             src/dynamics.cpp
             include/reef_msgs/dynamics.h
             include/reef_msgs/matrix_operation.h
-            src/matrix_operation.cpp)
+            src/matrix_operation.cpp
+            include/reef_msgs/AngleRepresentationInterface.h
+            src/AngleRepresentationInterface.cpp
+        src/ReefQuat.cpp include/reef_msgs/ReefQuat.h include/reef_msgs/ReefObjectConversion.h)
 
 add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
+
+add_subdirectory(test)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(reef_msgs ${catkin_LIBRARIES})
