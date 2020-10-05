@@ -6,47 +6,37 @@
 #define REEF_MSGS_REEFOBJECTCONVERSION_H
 
 #include "ReefQuat.h"
-#include <boost/any.hpp>
-#include <boost/variant.hpp>
-#include <boost/type_index.hpp>
-
-typedef boost::variant<geometry_msgs::Quaternion,
-        geometry_msgs::QuaternionStamped,
-        Eigen::Matrix<double,3, 1>> boostVariantQuatInputOutput;
-
+#include <iostream>
 
 namespace reef_msgs{
-    template<typename Derived>
-    void HandleEigenMatrixQuat(const Eigen::MatrixBase<Derived> matrix ,double &x,double &y,double &z,double &w)
-    {
-        x = matrix.coeff(0,0);
-        y = matrix.coeff(1,0);
-        z = matrix.coeff(2,0);
-        w = matrix.coeff(3,0);
-    }
 
     template<class T>
-    reef_msgs::ReefQuat fromAnyTypeToReefQuat(const boostVariantQuatInputOutput &_msgs ){
-        std::cout << boost::typeindex::type_id_with_cvr<T&>().pretty_name() << std::endl;
-        std::cout <<boost::typeindex::type_id_with_cvr<Eigen::Matrix<double,3, 1>&>().pretty_name()<< std::endl;
+    reef_msgs::ReefQuat fromAnyTypeToReefQuat(const T &_msgs ){
         double x,y,z,w;
-        if(boost::typeindex::type_id_with_cvr<T&>().pretty_name() == boost::typeindex::type_id_with_cvr<geometry_msgs::Quaternion&>().pretty_name()) {
-            std::cout<< "je suis dans la boucle dpd";
-            x = boost::get<const geometry_msgs::Quaternion&>(_msgs).x;
-            y = boost::get<const geometry_msgs::Quaternion&>(_msgs).y;
-            z = boost::get<const geometry_msgs::Quaternion&>(_msgs).z;
-            w = boost::get<const geometry_msgs::Quaternion&>(_msgs).w;
-        } else if(boost::typeindex::type_id_with_cvr<T&>().pretty_name() == boost::typeindex::type_id_with_cvr<geometry_msgs::QuaternionStamped&>().pretty_name()) {
-            x = boost::get<const geometry_msgs::QuaternionStamped&>(_msgs).quaternion.x;
-            y = boost::get<const geometry_msgs::QuaternionStamped&>(_msgs).quaternion.y;
-            z = boost::get<const geometry_msgs::QuaternionStamped&>(_msgs).quaternion.z;
-            w = boost::get<const geometry_msgs::QuaternionStamped&>(_msgs).quaternion.w;
-        }else if(boost::typeindex::type_id_with_cvr<T&>().pretty_name() == boost::typeindex::type_id_with_cvr<Eigen::Matrix<double,3, 1>&>().pretty_name()) {
-            std::cout<< "un peu nla mùerdum avec la parti";
-            x = boost::get<const Eigen::Matrix<double,3, 1>&>(_msgs).coeff(0,0);
-            y = boost::get<const Eigen::Matrix<double,3, 1>&>(_msgs).coeff(1,0);
-            z = boost::get<const Eigen::Matrix<double,3, 1>&>(_msgs).coeff(2,0);
-            w = boost::get<const Eigen::Matrix<double,3, 1>&>(_msgs).coeff(3,0);
+        if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
+            x = _msgs.x;
+            y = _msgs.y;
+            z = _msgs.z;
+            w = _msgs.w;
+        } else if constexpr(std::is_same<geometry_msgs::QuaternionStamped, T>::value) {
+            x = _msgs.quaternion.x;
+            y = _msgs.quaternion.y;
+            z = _msgs.quaternion.z;
+            w = _msgs.quaternion.w;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,4, 1>, T>::value)
+        || (std::is_same<Eigen::Vector4d , T>::value)
+        || (std::is_same<Eigen::Matrix<float,4, 1>, T>::value)
+        || (std::is_same<Eigen::Vector4f, T>::value) ) {
+            x = _msgs.coeff(0,0);
+            y = _msgs.coeff(1,0);
+            z = _msgs.coeff(2,0);
+            w = _msgs.coeff(3,0);
+        }else if constexpr((std::is_same<std::vector<double>, T>::value)
+        || (std::is_same<std::vector<float>, T>::value)) {
+            x = _msgs.at(0);
+            y = _msgs.at(1);
+            z = _msgs.at(2);
+            w = _msgs.at(3);
         } else{
             throw "This type isn't defined";
         }
@@ -55,9 +45,48 @@ namespace reef_msgs{
 
     template<class T>
     T fromReefQuatToAnyType(const reef_msgs::ReefQuat &_reefQuat){
-        std::cout << boost::typeindex::type_id_with_cvr<T&>().pretty_name() << std::endl;
-        geometry_msgs::Twist v;
-        return v;
+        //std::cout << boost::typeindex::type_id_with_cvr<T>::value.pretty_name() << std::endl;
+        if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
+            geometry_msgs::Quaternion q;
+            q.x = _reefQuat.x();
+            q.y = _reefQuat.y();
+            q.z = _reefQuat.z();
+            q.w = _reefQuat.w();
+            return q;
+        } else if constexpr(std::is_same<geometry_msgs::QuaternionStamped, T>::value) {
+            geometry_msgs::QuaternionStamped q;
+            q.quaternion.x = _reefQuat.x();
+            q.quaternion.y = _reefQuat.y();
+            q.quaternion.z = _reefQuat.z();
+            q.quaternion.w = _reefQuat.w();
+            return q;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,4, 1>, T>::value)
+                 || (std::is_same<Eigen::Vector4d , T>::value)) {
+            Eigen::Matrix<double,4, 1> q;
+            q << _reefQuat.x(), _reefQuat.y(), _reefQuat.z(), _reefQuat.w();
+            return q;
+        }else if constexpr((std::is_same<Eigen::Matrix<float,4, 1>, T>::value)
+                 || (std::is_same<Eigen::Vector4f, T>::value)) {
+            Eigen::Matrix<float,4, 1> q;
+            q << _reefQuat.x(), _reefQuat.y(), _reefQuat.z(), _reefQuat.w();
+            return q;
+        }else if constexpr(std::is_same<std::vector<double>, T>::value) {
+            std::vector<double> q;
+            q.push_back(_reefQuat.x());
+            q.push_back(_reefQuat.y());
+            q.push_back(_reefQuat.z());
+            q.push_back(_reefQuat.w());
+            return q;
+        }else if constexpr(std::is_same<std::vector<float>, T>::value) {
+            std::vector<float> q;
+            q.push_back(_reefQuat.x());
+            q.push_back(_reefQuat.y());
+            q.push_back(_reefQuat.z());
+            q.push_back(_reefQuat.w());
+            return q;
+        } else{
+            throw "This type isn't defined";
+        }
     }
 }
 
