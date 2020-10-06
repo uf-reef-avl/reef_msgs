@@ -51,7 +51,7 @@ add_library(reef_msgs
             src/matrix_operation.cpp
             include/reef_msgs/AngleRepresentationInterface.h
             src/AngleRepresentationInterface.cpp
-        src/ReefQuat.cpp include/reef_msgs/ReefQuat.h include/reef_msgs/ReefObjectConversion.h)
+        src/ReefQuat.cpp include/reef_msgs/ReefQuat.h include/reef_msgs/ReefObjectConversion.h src/EulerAngle.cpp include/reef_msgs/EulerAngle.h src/RodriguezParameter.cpp include/reef_msgs/RodriguezParameter.h src/AxisAngle.cpp include/reef_msgs/AxisAngle.h src/DCM.cpp include/reef_msgs/DCM.h src/RotationMatrix.cpp include/reef_msgs/RotationMatrix.h)
 
 add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
 

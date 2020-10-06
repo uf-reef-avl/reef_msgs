@@ -9,14 +9,11 @@
 #include <eigen3/Eigen/Geometry>
 #include <ros/ros.h>
 #include <tf/tf.h>
+#include <stdlib.h>
+#include <iostream>
 
 namespace reef_msgs{
     class AngleRepresentationInterface {
-        protected:
-          /*
-           * conversion part where all the magic is done
-           */
-
         public:
             AngleRepresentationInterface() {};
             AngleRepresentationInterface(const AngleRepresentationInterface & _other);
