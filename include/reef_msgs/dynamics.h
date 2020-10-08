@@ -1,10 +1,9 @@
 //
 // Created by prashant on 2/28/19.
 //
-
+#pragma once
 #ifndef PROJECT_DYNAMICS_H
 #define PROJECT_DYNAMICS_H
-
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <ros/ros.h>

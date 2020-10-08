@@ -5,7 +5,7 @@
 
 namespace reef_msgs {
 
-    auto RotationMatrix::getRotationMatrix() -> Eigen::Matrix<double, 3, 3> & {
+    auto RotationMatrix::getRotationMatrix()  -> Eigen::Matrix<double, 3, 3> & {
         return m_RotationMatrix;
     }
 
@@ -14,13 +14,13 @@ namespace reef_msgs {
         m_RotationMatrix = _RotationMatrix;
     }
 
-    RotationMatrix::RotationMatrix(RotationMatrix &_other) {
-        m_RotationMatrix = _other.getRotationMatrix();
+    RotationMatrix::RotationMatrix(const RotationMatrix &_other) {
+        m_RotationMatrix = _other.m_RotationMatrix;
     }
 
 
-    RotationMatrix &RotationMatrix::operator=(RotationMatrix &_other) {
-        m_RotationMatrix = _other.getRotationMatrix();
+    RotationMatrix &RotationMatrix::operator=(const RotationMatrix &_other) {
+        m_RotationMatrix = _other.m_RotationMatrix;
     }
 
     std::ostream &operator<<(std::ostream &os, const RotationMatrix &_inst) {
@@ -34,4 +34,3 @@ namespace reef_msgs {
     }
 }
 
-#include "reef_msgs/RotationMatrix.h"

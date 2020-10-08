@@ -4,7 +4,7 @@
 #include "../include/reef_msgs/DCM.h"
 
 namespace reef_msgs {
- 
+
     auto DCM::getDCM() -> Eigen::Matrix<double, 3, 3> & {
         return m_DCM;
     }
@@ -13,13 +13,13 @@ namespace reef_msgs {
         m_DCM = _DCM;
     }
 
-    DCM::DCM( DCM &_other) {
-        m_DCM = _other.getDCM();
+    DCM::DCM( const DCM &_other) {
+        m_DCM = _other.m_DCM;
     }
 
 
-    DCM & DCM::operator=( DCM & _other) {
-        m_DCM = _other.getDCM();
+    DCM & DCM::operator=(const DCM & _other) {
+        m_DCM = _other.m_DCM;
     }
 
     std::ostream & operator<<(std::ostream &os, const DCM &_inst) {

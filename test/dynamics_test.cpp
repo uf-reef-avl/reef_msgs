@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 
 #include <eigen3/Eigen/Core>
-#include "../include/reef_msgs/ReefQuat.h"
 #include "../include/reef_msgs/dynamics.h"
 #include "../include/reef_msgs/matrix_operation.h"
 

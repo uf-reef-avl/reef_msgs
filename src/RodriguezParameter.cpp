@@ -6,53 +6,45 @@
 
 namespace reef_msgs{
 
-    void RodriguezParameter::setParameter(const double &_a, const double &_b, const double &_c, const double &_d) {
-        m_parameter(0,0) = _a;
-        m_parameter(1,0) = _b;
-        m_parameter(2,0) = _c;
-        m_parameter(3,0) = _d;
+    void RodriguezParameter::setParameter(const double &_x, const double &_y, const double &_z) {
+        m_parameter(0,0) = _x;
+        m_parameter(1,0) = _y;
+        m_parameter(2,0) = _z;
     }
-    auto RodriguezParameter::getParameter() const -> const Eigen::Matrix<double, 4, 1> & {
+    auto RodriguezParameter::getParameter() const -> const Eigen::Matrix<double, 3, 1> & {
         return m_parameter;
     }
-    auto RodriguezParameter::a() const -> double {
+    auto RodriguezParameter::x() const -> double {
         return m_parameter(0,0);
     }
-    void RodriguezParameter::setA(const double &_a) {
-        m_parameter(0,0) = _a;
+    void RodriguezParameter::setX(const double &_x) {
+        m_parameter(0,0) = _x;
     }
-    auto RodriguezParameter::b() const ->  double {
+    auto RodriguezParameter::y() const ->  double {
         return m_parameter(1,0);
     }
-    void RodriguezParameter::setB(const double &_b) {
-        m_parameter(1,0) = _b;
+    void RodriguezParameter::setY(const double &_y) {
+        m_parameter(1,0) = _y;
     }
-    auto RodriguezParameter::c() const ->  double {
+    auto RodriguezParameter::z() const ->  double {
         return m_parameter(2,0);
     }
-    void RodriguezParameter::setC(const double &_c) {
-        m_parameter(2,0) = _c;
-    }
-    auto RodriguezParameter::d() const -> double {
-        return m_parameter(3,0);
-    }
-    void RodriguezParameter::setD(const double &_d) {
-        m_parameter(3,0) = _d;
+    void RodriguezParameter::setZ(const double &_z) {
+        m_parameter(2,0) = _z;
     }
     RodriguezParameter::RodriguezParameter(const RodriguezParameter &_other) {
         m_parameter = _other.getParameter();
     }
 
-    RodriguezParameter::RodriguezParameter(const double &_a, const double &_b, const double &_c, const double &_d):AngleRepresentationInterface(){
-        setParameter(_a,_b,_c,_d);
+    RodriguezParameter::RodriguezParameter(const double &_x, const double &_y, const double &_z):AngleRepresentationInterface(){
+        setParameter(_x,_y,_z);
     }
-    RodriguezParameter::RodriguezParameter(const Eigen::Matrix<double, 4, 1> &_quat):AngleRepresentationInterface(), m_parameter(_quat) {}
+    RodriguezParameter::RodriguezParameter(const Eigen::Matrix<double, 3, 1> &_quat):AngleRepresentationInterface(), m_parameter(_quat) {}
     RodriguezParameter & RodriguezParameter::operator=(const RodriguezParameter & _other) {
         m_parameter = _other.getParameter();
     }
     std::ostream & operator<<(std::ostream &os, const RodriguezParameter &_inst) {
-        os << "Rodriguez parameters { a : " << _inst.a() << ", b : " << _inst.b() <<", c : " << _inst.c() <<", d : " << _inst.d()<<" };" ;
+        os << "Rodriguez parameters { x : " << _inst.x() << ", y : " << _inst.y() <<", z : " << _inst.z() <<" };" ;
         return os;
     }
 }
-#include "reef_msgs/RodriguezParameter.h"

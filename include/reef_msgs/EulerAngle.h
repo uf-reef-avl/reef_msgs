@@ -4,6 +4,7 @@
 #pragma once
 #ifndef REEF_MSGS_EULERANGLE_H
 #define REEF_MSGS_EULERANGLE_H
+
 #include "AngleRepresentationInterface.h"
 
 namespace reef_msgs {

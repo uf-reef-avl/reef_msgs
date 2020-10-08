@@ -3,7 +3,7 @@
 //
 
 #include "../include/reef_msgs/dynamics.h"
-#include "../include/reef_msgs/ReefQuat.h"
+#include "../include/reef_msgs/Quaternion.h"
 namespace reef_msgs
 {
 
@@ -70,7 +70,7 @@ Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double
 {
   Eigen::Quaterniond q;
   quaternion_from_roll_pitch_yaw(roll,pitch, yaw, q);
-  return ReefQuat::quaternionToRotation(q);
+  return Quaternion::quaternionToRotation(q);
 }
 
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pitch, double& yaw)

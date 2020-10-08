@@ -1,7 +1,7 @@
 //
 // Created by prashant on 2/28/19.
 //
-
+#pragma once
 #ifndef PROJECT_MATRIX_OPERATION_H
 #define PROJECT_MATRIX_OPERATION_H
 #include <eigen3/Eigen/Core>

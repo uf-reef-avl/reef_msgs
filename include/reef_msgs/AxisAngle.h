@@ -1,7 +1,7 @@
 //
 // Created by paul on 10/5/20.
 //
-
+#pragma once
 #ifndef REEF_MSGS_AXISANGLE_H
 #define REEF_MSGS_AXISANGLE_H
 #include "AngleRepresentationInterface.h"
