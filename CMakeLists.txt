@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
         rospy
         std_msgs
         tf2_eigen
+        tf2
 )
 find_package(Eigen3 REQUIRED)
 
