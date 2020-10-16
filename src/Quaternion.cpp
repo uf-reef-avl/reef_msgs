@@ -123,7 +123,7 @@ auto Quaternion::toRotation() -> Eigen::Matrix3d {
         return rodriguezParameter;
     }
 
-    auto Quaternion::toEulerAngle(const std::string &_eulerTransformation) -> Eigen::Matrix<double, 3, 1> {
+    auto Quaternion::toEulerAngle(const std::string &_eulerTransformation ) -> Eigen::Matrix<double, 3, 1> {
         Eigen::Matrix<double, 3, 1> eulerAngle;
         if(_eulerTransformation == "121") {
             double t1 = atan2(this->z(),this->y());
