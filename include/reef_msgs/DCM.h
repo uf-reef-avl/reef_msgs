@@ -11,13 +11,15 @@ namespace reef_msgs {
     class DCM : public reef_msgs::AngleRepresentationInterface {
     public:
         DCM(const Eigen::Matrix<double, 3, 3> &_DCM);
-
         DCM(const DCM &other);
-
         auto getDCM() -> Eigen::Matrix<double, 3, 3> &;
-
-
         DCM &operator=( const DCM &_other);
+
+        auto toEulerAngle(const std::string &_eulerTransformation ="321") -> Eigen::Matrix<double,3,1>;
+        auto toRotationMatrix() -> Eigen::Matrix3d;
+        auto toAxisAngle() -> Eigen::Matrix<double,4,1>;
+        auto toQuaternion() -> Eigen::Matrix<double,4,1>;
+        auto toRodriguezParameter() -> Eigen::Matrix<double,3,1>;
 
         friend std::ostream &operator<<(std::ostream &os, const DCM &_inst);
 
