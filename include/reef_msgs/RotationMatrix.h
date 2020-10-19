@@ -23,6 +23,13 @@ namespace reef_msgs {
 
         ~RotationMatrix() {};
 
+        auto toEulerAngle(const std::string &_eulerTransformation ="321") -> Eigen::Matrix<double,3,1>;
+        auto toDCM() -> Eigen::Matrix3d;
+        auto toAxisAngle() -> Eigen::Matrix<double,4,1>;
+        auto toQuaternion() -> Eigen::Matrix<double,4,1>;
+        auto toRodriguezParameter() -> Eigen::Matrix<double,3,1>;
+
+
         Eigen::Matrix<double, 3, 3> m_RotationMatrix; //!< this matrix store all the informations of the direction cosine matrix;
 
     };

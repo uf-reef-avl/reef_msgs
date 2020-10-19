@@ -2,6 +2,7 @@
 // Created by paul on 10/5/20.
 //
 #include "../include/reef_msgs/RotationMatrix.h"
+#include "../include/reef_msgs/DCM.h"
 
 namespace reef_msgs {
 
@@ -16,6 +17,22 @@ namespace reef_msgs {
 
     RotationMatrix::RotationMatrix(const RotationMatrix &_other) {
         m_RotationMatrix = _other.m_RotationMatrix;
+    }
+
+    auto RotationMatrix::toEulerAngle(const std::string &_eulerTransformation) -> Eigen::Matrix<double, 3, 1> {
+        return reef_msgs::DCM(toDCM()).toEulerAngle(_eulerTransformation);
+    }
+    auto RotationMatrix::toDCM() -> Eigen::Matrix3d{
+        return m_RotationMatrix.transpose();
+    }
+    auto RotationMatrix::toAxisAngle() -> Eigen::Matrix<double,4,1>{
+        return reef_msgs::DCM(toDCM()).toAxisAngle();
+    }
+    auto RotationMatrix::toQuaternion() -> Eigen::Matrix<double,4,1>{
+        return reef_msgs::DCM(toDCM()).toQuaternion();
+    }
+    auto RotationMatrix::toRodriguezParameter() -> Eigen::Matrix<double,3,1>{
+        return reef_msgs::DCM(toDCM()).toRodriguezParameter();
     }
 
 
