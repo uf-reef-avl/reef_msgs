@@ -23,6 +23,12 @@ namespace reef_msgs{
         auto z() const-> double;
         void setZ(const double &_z);
 
+        auto toEulerAngle(const std::string &_eulerTransformation ="321") -> Eigen::Matrix<double,3,1>;
+        auto toRotationMatrix() -> Eigen::Matrix3d;
+        auto toAxisAngle() -> Eigen::Matrix<double,4,1>;
+        auto toQuaternion() -> Eigen::Matrix<double,4,1>;
+        auto toDCM() -> Eigen::Matrix<double,3,3>;
+
 
         RodriguezParameter& operator=(const RodriguezParameter & _other);
         friend std::ostream& operator<<(std::ostream& os,const RodriguezParameter & _inst);
