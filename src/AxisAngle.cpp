@@ -80,10 +80,10 @@ namespace reef_msgs {
 
     auto AxisAngle::normalized() -> Eigen::Matrix<double, 4, 1> {
         Eigen::Matrix<double, 4, 1> q;
-        q(0, 0) = sqrt((m_axisAngle.transpose() * m_axisAngle)(0, 0));
-        q(1, 0) = m_axisAngle(0, 0) / q(0, 0);
-        q(2, 0) = m_axisAngle(1, 0) / q(0, 0);
-        q(3, 0) = m_axisAngle(2, 0) / q(0, 0);
+        q(3, 0) = sqrt((m_axisAngle.transpose() * m_axisAngle)(0, 0));
+        q(0, 0) = m_axisAngle(0, 0) / q(0, 0);
+        q(1, 0) = m_axisAngle(1, 0) / q(0, 0);
+        q(2, 0) = m_axisAngle(2, 0) / q(0, 0);
         return q;
     }
 
@@ -100,21 +100,21 @@ namespace reef_msgs {
     auto AxisAngle::toQuaternion() -> Eigen::Matrix<double, 4, 1> {
         Eigen::Matrix<double, 4, 1> q;
         auto q1 = normalized();
-        auto sp = sin(q1(0, 0) / 2);
-        q(3, 0) = cos(q1(0, 0) / 2);
-        q(0, 0) = q1(1, 0) * sp;
-        q(1, 0) = q1(2, 0) * sp;
-        q(2, 0) = q1(3, 0) * sp;
+        auto sp = sin(q1(3, 0) / 2);
+        q(3, 0) = cos(q1(3, 0) / 2);
+        q(0, 0) = q1(0, 0) * sp;
+        q(1, 0) = q1(1, 0) * sp;
+        q(2, 0) = q1(2, 0) * sp;
         return q;
     }
 
     auto AxisAngle::toRodriguezParameter() -> Eigen::Matrix<double, 3, 1> {
-        Eigen::Matrix<double, 3, 1> q1 = normalized();
-        auto tp = tan(q1(0, 0) / 2);
+        Eigen::Matrix<double, 4, 1> q1 = normalized();
+        auto tp = tan(q1(3, 0) / 2);
         Eigen::Matrix<double, 3, 1> q;
-        q(0, 0) = q1(1, 0) * tp;
-        q(1, 0) = q1(2, 0) * tp;
-        q(2, 0) = q1(3, 0) * tp;
+        q(0, 0) = q1(0, 0) * tp;
+        q(1, 0) = q1(1, 0) * tp;
+        q(2, 0) = q1(2, 0) * tp;
 
         return q;
     }
