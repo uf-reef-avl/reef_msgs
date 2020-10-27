@@ -63,15 +63,19 @@ namespace reef_msgs{
       auto Xi() -> Eigen::Matrix<double, 4, 3>;
       auto Psi() -> Eigen::Matrix<double, 4, 3>;
 
-      Quaternion& operator=(const Quaternion & _other);
-      Quaternion& operator*(const Quaternion & _other);
+      Quaternion& operator= (const Quaternion & _other);
+      //Quaternion operator* (const Quaternion & _other);
       friend std::ostream& operator<<(std::ostream& os,const Quaternion & _inst);
       ~Quaternion() {};
     private:
       Eigen::Matrix<double,4,1> m_q; //!< this matrix store the quaternion value in the "xyzw" order
 
     };
-
+    inline Quaternion operator*(Quaternion a, Quaternion const& b) {
+        // note 'a' is passed by value and thus copied
+        a = Quaternion::quaternionMultiplication(a.getQuaternion(), b.getQuaternion());
+        return a;
+    }
 };
 
 
