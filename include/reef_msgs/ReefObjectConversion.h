@@ -94,8 +94,93 @@ namespace reef_msgs{
     }
 
     template<class T>
+    reef_msgs::DCM fromAnyTypeToDCM(const T &_msgs ){
+        Eigen::Matrix3d mat;
+        if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
+        || (std::is_same<Eigen::Matrix<double,3,3>, T>::value)
+           || (std::is_same<Eigen::Matrix3f, T>::value)
+              || (std::is_same<Eigen::Matrix<float,3,3>, T>::value)){
+            mat << _msgs;
+        } else{
+            throw "This type isn't defined";
+        }
+        return reef_msgs::DCM(mat);
+    }
+
+    template<class T>
+    reef_msgs::EulerAngle fromAnyTypeToEulerAngle(const T &_msgs , const std::string &_eulerTransformation){
+        double yaw,pitch,roll;
+        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+            yaw = _msgs.x;
+            pitch = _msgs.y;
+            roll = _msgs.z;
+        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+            yaw = _msgs.vector.x;
+            pitch = _msgs.vector.y;
+            roll = _msgs.vector.z;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3d , T>::value)
+                           || (std::is_same<Eigen::Matrix<float,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3f, T>::value) ) {
+            yaw = _msgs.coeff(0,0);
+            pitch = _msgs.coeff(1,0);
+            roll = _msgs.coeff(2,0);
+        }else if constexpr((std::is_same<std::vector<double>, T>::value)
+                           || (std::is_same<std::vector<float>, T>::value)) {
+            yaw = _msgs.at(0);
+            pitch = _msgs.at(1);
+            roll = _msgs.at(2);
+        } else{
+            throw "This type isn't defined";
+        }
+        return reef_msgs::EulerAngle(yaw,pitch,roll,_eulerTransformation);
+
+    }
+
+    template<class T>
+    reef_msgs::RodriguezParameter fromAnyTypeToRodriguezParameter(const T &_msgs ){
+        double x,y,z;
+        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+            x = _msgs.x;
+            y = _msgs.y;
+            z = _msgs.z;
+        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+            x = _msgs.vector.x;
+            y = _msgs.vector.y;
+            z = _msgs.vector.z;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3d , T>::value)
+                           || (std::is_same<Eigen::Matrix<float,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3f, T>::value) ) {
+            x = _msgs.coeff(0,0);
+            y = _msgs.coeff(1,0);
+            z = _msgs.coeff(2,0);
+        }else if constexpr((std::is_same<std::vector<double>, T>::value)
+                           || (std::is_same<std::vector<float>, T>::value)) {
+            x = _msgs.at(0);
+            y = _msgs.at(1);
+            z = _msgs.at(2);
+        } else{
+            throw "This type isn't defined";
+        }
+        return reef_msgs::RodriguezParameter(x,y,z);
+    }
+
+    template<class T>
+    reef_msgs::RotationMatrix fromAnyTypeToRotationMatrix(const T &_msgs ){
+        Eigen::Matrix3d mat;
+        if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
+                     || (std::is_same<Eigen::Matrix<double,3,3>, T>::value)
+                     || (std::is_same<Eigen::Matrix3f, T>::value)
+                     || (std::is_same<Eigen::Matrix<float,3,3>, T>::value)){
+            mat << _msgs;
+        } else{
+            throw "This type isn't defined";
+        }
+        return reef_msgs::RotationMatrix(mat);
+    }
+    template<class T>
     T fromQuaternionToAnyType(const reef_msgs::Quaternion &_Quaternion){
-        //std::cout << boost::typeindex::type_id_with_cvr<T>::value.pretty_name() << std::endl;
         if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
             geometry_msgs::Quaternion q;
             q.x = _Quaternion.x();
@@ -188,6 +273,82 @@ namespace reef_msgs{
             q.push_back(_axisAngle.z());
             q.push_back(_axisAngle.angle());
             return q;
+        } else{
+            throw "This type isn't defined";
+        }
+    }
+
+    template<class T>
+    T fromDCMToAnyType(const reef_msgs::DCM &_DCM){
+        if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
+                     || (std::is_same<Eigen::Matrix<double,3,3>, T>::value)
+                     ){
+            Eigen::Matrix3d mat;
+            mat << _DCM.m_DCM;
+            return mat;
+        }else if constexpr((std::is_same<Eigen::Matrix3f, T>::value)
+                              || (std::is_same<Eigen::Matrix<float,3,3>, T>::value)) {
+            Eigen::Matrix3f mat;
+            mat << _DCM.m_DCM;
+            return mat;
+        } else{
+            throw "This type isn't defined";
+        }
+    }
+
+    template<class T>
+    T fromEulerAngleToAnyType(const reef_msgs::EulerAngle &_eulerAngle){
+        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+            geometry_msgs::Vector3 outputAngle;
+            outputAngle.x = _eulerAngle.yaw();
+            outputAngle.y = _eulerAngle.pitch();
+            outputAngle.z = _eulerAngle.roll();
+            return outputAngle;
+        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+            geometry_msgs::Vector3Stamped outputAngle;
+            outputAngle.vector.x = _eulerAngle.yaw();
+            outputAngle.vector.y = _eulerAngle.pitch();
+            outputAngle.vector.z = _eulerAngle.roll();
+            return outputAngle;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3d , T>::value)){
+            Eigen::Matrix<double,3, 1> outputAngle;
+            outputAngle << _eulerAngle.getEulerAngle();
+            return outputAngle;
+        }else if constexpr((std::is_same<Eigen::Matrix<float,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3f, T>::value) ) {
+            Eigen::Matrix<float,3, 1> outputAngle;
+            outputAngle << _eulerAngle.getEulerAngle();
+            return outputAngle;
+        }else if constexpr((std::is_same<std::vector<double>, T>::value)
+                           || (std::is_same<std::vector<float>, T>::value)) {
+            std::vector<double> outputAngle;
+            outputAngle.push_back(_eulerAngle.yaw());
+            outputAngle.push_back(_eulerAngle.pitch());
+            outputAngle.push_back(_eulerAngle.roll());
+            return outputAngle;
+        } else{
+            throw "This type isn't defined";
+        }
+    }
+
+    template<class T>
+    T fromRodriguezParameterToAnyType(const reef_msgs::RodriguezParameter &_rodriguezParameter){
+
+    }
+    template<class T>
+    T fromRotationMatrixToAnyType(const reef_msgs::RotationMatrix &_rotationMatrix){
+        if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
+                     || (std::is_same<Eigen::Matrix<double,3,3>, T>::value)
+                ){
+            Eigen::Matrix3d mat;
+            mat << _rotationMatrix.m_RotationMatrix;
+            return mat;
+        }else if constexpr((std::is_same<Eigen::Matrix3f, T>::value)
+                           || (std::is_same<Eigen::Matrix<float,3,3>, T>::value)) {
+            Eigen::Matrix3f mat;
+            mat << _rotationMatrix.m_RotationMatrix;
+            return mat;
         } else{
             throw "This type isn't defined";
         }
