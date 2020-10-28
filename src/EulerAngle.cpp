@@ -73,12 +73,12 @@ namespace reef_msgs {
     }
 
     auto EulerAngle::toDCM() -> Eigen::Matrix3d {
-        auto st1 = sin(m_eulerTransformation[0,0]);
-        auto ct1 = cos(m_eulerTransformation[0,0]);
-        auto st2 = sin(m_eulerTransformation[1,0]);
-        auto ct2 = cos(m_eulerTransformation[1,0]);
-        auto st3 = sin(m_eulerTransformation[2,0]);
-        auto ct3 = cos(m_eulerTransformation[2,0]);
+        auto st1 = sin(m_EA(0,0));
+        auto ct1 = cos(m_EA(0,0));
+        auto st2 = sin(m_EA(1,0));
+        auto ct2 = cos(m_EA(1,0));
+        auto st3 = sin(m_EA(2,0));
+        auto ct3 = cos(m_EA(2,0));
         Eigen::Matrix<double,3, 3> C;
 
         if(m_eulerTransformation == "121") {
@@ -341,6 +341,7 @@ namespace reef_msgs {
             q3 =  cos(e2)* sin(e1+e3);
         }
         q << q1,q2,q3,q0;
+        return q;
     }
     auto EulerAngle::toRodriguezParameter() -> Eigen::Matrix<double,3,1>{
         return Quaternion(toQuaternion()).toRodriguezParameter();

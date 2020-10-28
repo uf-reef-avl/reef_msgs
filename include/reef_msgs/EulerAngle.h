@@ -7,11 +7,12 @@
 
 #include "AngleRepresentationInterface.h"
 
+
 namespace reef_msgs {
     class EulerAngle : public reef_msgs::AngleRepresentationInterface {
     public:
-        EulerAngle(const double &_yaw, const double &_pitch, const double &_roll, const std::string &_eulerTransformation = "321");
-        EulerAngle(const Eigen::Matrix<double, 3, 1> &_eulerAngle, const std::string &_eulerTransformation = "321");
+        EulerAngle(const double &_yaw, const double &_pitch, const double &_roll, const std::string &_eulerTransformation);
+        EulerAngle(const Eigen::Matrix<double, 3, 1> &_eulerAngle, const std::string &_eulerTransformation);
         EulerAngle(const EulerAngle &other);
 
         void setEulerAngle(const double &_yaw, const double &_pitch, const double &_roll);

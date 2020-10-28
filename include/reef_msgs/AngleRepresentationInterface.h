@@ -11,6 +11,7 @@
 #include <tf/tf.h>
 #include <stdlib.h>
 #include <iostream>
+#include <string>
 
 namespace reef_msgs{
     class AngleRepresentationInterface {
