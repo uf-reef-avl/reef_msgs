@@ -4,13 +4,11 @@
 
 
 #include <gtest/gtest.h>
-
 #include <eigen3/Eigen/Core>
 #include "../include/reef_msgs/Quaternion.h"
 #include "../include/reef_msgs/dynamics.h"
 #include "../include/reef_msgs/matrix_operation.h"
 #include "../../../../../../usr/src/googletest/googlemock/include/gmock/gmock-matchers.h"
-
 
 TEST(test_quat, test_eq) {
     reef_msgs::Quaternion quat = reef_msgs::Quaternion::rand();
@@ -22,13 +20,11 @@ TEST(test_quat, test_eq) {
     std::cout<< quat1<< std::endl;
     quat.normalize();
     std::cout<< quat << std::endl;
-    std::cout<<"blblblblblblb"<< std::endl;
     reef_msgs::Quaternion quat2 = reef_msgs::Quaternion::eye();
     std::cout<< quat2<< std::endl;
     quat2.setQuaternion(5.,5.,5.,5.);
     std::cout<< quat2<< std::endl;
     quat2.normalize();
-    std::cout<<"blblblblblblb"<< std::endl;
     std::cout<< quat2<< std::endl;
     quat2.imagine();
     std::cout<< quat2<< std::endl;
