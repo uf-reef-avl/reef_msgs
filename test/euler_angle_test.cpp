@@ -7,7 +7,8 @@
 #include "../include/reef_msgs/EulerAngle.h"
 #include "../include/reef_msgs/dynamics.h"
 #include "../include/reef_msgs/matrix_operation.h"
-
+#include "./include/test_utilities.h"
+#include <fstream>
 
 TEST(test_euler, eulerAngletoOtherMatrixAngle) {
     reef_msgs::EulerAngle euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"121");
@@ -123,55 +124,181 @@ TEST(test_euler, eulertoQuaternion) {
 
 
 TEST(test_euler, eulertoAxisAngle) {
-    reef_msgs::EulerAngle euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"121");
-    Eigen::Matrix<double, 4, 1> mat = euler.toAxisAngle();
-    Eigen::Matrix<double, 3, 1> m;
-    m <<  1.01715347,  0.46183053, -0.16727408;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"123");
-    mat = euler.toAxisAngle();
-    m <<  0.36101132, 0.3671951 , 0.88769016;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"131");
-    mat = euler.toAxisAngle();
-    m <<  1.01715347, 0.16727408, 0.46183053;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"132");
-    mat = euler.toAxisAngle();
-    m <<  -0.0455478 ,  0.80748702,  0.50988301;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"212");
-    mat = euler.toAxisAngle();
-    m <<  0.46183053, 1.01715347, 0.16727408;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"213");
-    mat = euler.toAxisAngle();
-    m <<   0.50988301, -0.0455478 ,  0.80748702;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"231");
-    mat = euler.toAxisAngle();
-    m <<  0.88769016, 0.36101132, 0.3671951 ;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"232");
-    mat = euler.toAxisAngle();
-    m <<  -0.16727408,  1.01715347,  0.46183053;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"312");
-    mat = euler.toAxisAngle();
-    m <<  0.3671951 , 0.88769016, 0.36101132;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"313");
-    mat = euler.toAxisAngle();
-    m <<   0.46183053, -0.16727408,  1.01715347;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"321");
-    mat = euler.toAxisAngle();
-    m <<   0.80748702,  0.50988301, -0.0455478 ;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
-    euler = reef_msgs::EulerAngle(0.1710, 0.4698, 0.8660,"323");
-    mat = euler.toAxisAngle();
-    m <<  0.16727408, 0.46183053, 1.01715347;
-    ASSERT_TRUE(mat.block(0,0,3,1).isApprox(m, 0.0001));
+    std::ifstream i("../../../reef_msgs/test/data_test/test_euler.json");
+    nlohmann::json j;
+    i >> j;
+    for (auto& it : j) {
+        if(it.contains("eulerAngle1212axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle1212axisAngle").at("eulerAngle121");
+            std::string output = it.at("eulerAngle1212axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "121");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle1212axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle1212axisAngle").at("eulerAngle121");
+            std::string output = it.at("eulerAngle1212axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "121");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle1232axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle1232axisAngle").at("eulerAngle123");
+            std::string output = it.at("eulerAngle1232axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "123");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle1312axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle1312axisAngle").at("eulerAngle131");
+            std::string output = it.at("eulerAngle1312axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "131");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle1322axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle1322axisAngle").at("eulerAngle132");
+            std::string output = it.at("eulerAngle1322axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "132");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle2122axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle2122axisAngle").at("eulerAngle212");
+            std::string output = it.at("eulerAngle2122axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "212");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle2132axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle2132axisAngle").at("eulerAngle213");
+            std::string output = it.at("eulerAngle2132axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "213");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle2312axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle2312axisAngle").at("eulerAngle231");
+            std::string output = it.at("eulerAngle2312axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "231");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle2322axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle2322axisAngle").at("eulerAngle232");
+            std::string output = it.at("eulerAngle2322axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "232");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle3122axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle3122axisAngle").at("eulerAngle312");
+            std::string output = it.at("eulerAngle3122axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "312");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle3132axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle3132axisAngle").at("eulerAngle313");
+            std::string output = it.at("eulerAngle3132axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "313");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle3212axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle3212axisAngle").at("eulerAngle321");
+            std::string output = it.at("eulerAngle3212axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "321");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+        if(it.contains("eulerAngle3232axisAngle")) {
+            std::cout<< it << std::endl;
+            Eigen::Matrix<double,3,1> eulerAngleInput;
+            Eigen::Matrix<double,4,1> Output;
+            std::string input =  it.at("eulerAngle3232axisAngle").at("eulerAngle323");
+            std::string output = it.at("eulerAngle3232axisAngle").at("axisAngle");
+            std::cout << input<<std::endl;
+            test_utilities::str_to_EigenMatrix(eulerAngleInput, 3, 1, input,"," );
+            test_utilities::str_to_EigenMatrix(Output,4, 1, output,"," );
+            reef_msgs::EulerAngle eulerAngle = reef_msgs::EulerAngle(eulerAngleInput, "323");
+            Eigen::Matrix<double, 4, 1> mat = eulerAngle.toAxisAngle();
+            ASSERT_TRUE(mat.isApprox(Output, 0.0001));
+        }
+
+    }
 }
 
 

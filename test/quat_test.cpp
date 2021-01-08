@@ -67,6 +67,16 @@ TEST(test_quat, fromDCM) {
 }
 
 
+TEST(test_quat, fromAxisAngle) {
+    Eigen::Matrix<double, 3, 1> vector;
+    vector << 0.2, 0.4, 0.8;
+    Eigen::Matrix<double, 4, 1> quat = reef_msgs::Quaternion::fromAngleAxistoQuaternion(100, vector);
+    Eigen::Matrix<double, 4, 1> result;
+    result << -0.05725489, -0.11450977, -0.22901955,  0.96496603;
+    ASSERT_TRUE(result.isApprox(quat, 0.0001));
+}
+
+
 TEST(test_quat, QuaterniontoOtherMatrixAngle) {
     reef_msgs::Quaternion quat = reef_msgs::Quaternion(0.4, 0.3, 0.2, 5);
     Eigen::Matrix<double, 3, 3> mat = quat.toDCM();
@@ -83,10 +93,11 @@ TEST(test_quat, QuaterniontoOtherMatrixAngle) {
 }
 
 TEST(test_quat, QuaterniontoOther4DAngle) {
-    reef_msgs::Quaternion quat = reef_msgs::Quaternion(0.4, 0.3, 0.2, -0.3);
+
+    reef_msgs::Quaternion quat = reef_msgs::Quaternion( 0.2109838268563661, 0.19050591331489203, 0.15409707606385747, 0.9462808319656861);
     Eigen::Matrix<double, 4, 1> mat2 = quat.toAxisAngle();
     Eigen::Matrix<double, 4, 1> vec;
-    vec << 1.57283733, 1.179628, 0.78641866 , 3.7509779616205883 ;
+    vec << 0.38798443105430264, 0.3138341762911236, 0.8665888246747364, 0.42968975923188696 ;
     ASSERT_TRUE(mat2.isApprox(vec, 0.0001));
 }
 
@@ -134,12 +145,3 @@ TEST(test_quat, QuaterniontoOther3DAngle) {
     ASSERT_TRUE(mat2.isApprox(vec, 0.0001));
 }
 
-
-TEST(test_quat, fromAxisAngle) {
-    Eigen::Matrix<double, 3, 1> vector;
-    vector << 0.2, 0.4, 0.8;
-    Eigen::Matrix<double, 4, 1> quat = reef_msgs::Quaternion::fromAngleAxistoQuaternion(100, vector);
-    Eigen::Matrix<double, 4, 1> result;
-    result << -0.05725489, -0.11450977, -0.22901955,  0.96496603;
-    ASSERT_TRUE(result.isApprox(quat, 0.0001));
-}
