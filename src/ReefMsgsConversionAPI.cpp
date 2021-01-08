@@ -19,7 +19,7 @@ namespace reef_msgs{
     template<class S, class T>
     T fromQuaternionToEulerAngle(const S &_inputMsgs, const std::string &_eulerTransformation){
         reef_msgs::Quaternion inputAngle = reef_msgs::fromAnyTypeToQuaternion<S>(_inputMsgs);
-        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation)));
+        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation),_eulerTransformation));
     }
     template<class S, class T>
     T fromQuaternionToRodriguezParameter(const S &_inputMsgs){
@@ -46,7 +46,7 @@ namespace reef_msgs{
     template<class S, class T>
     T fromAxisAngleToEulerAngle(const S &_inputMsgs, const std::string &_eulerTransformation){
         reef_msgs::AxisAngle inputAngle = reef_msgs::fromAnyTypeToAxisAngle<S>(_inputMsgs);
-        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation)));
+        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation),_eulerTransformation));
     }
     template<class S, class T>
     T fromAxisAngleToRodriguezParameter(const S &_inputMsgs){
@@ -72,7 +72,7 @@ namespace reef_msgs{
     template<class S, class T>
     T fromDCMToEulerAngle(const S &_inputMsgs, const std::string &_eulerTransformation){
         reef_msgs::DCM inputAngle = reef_msgs::fromAnyTypeToDCM<S>(_inputMsgs);
-        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation)));
+        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation),_eulerTransformation));
     }
     template<class S, class T>
     T fromDCMToRodriguezParameter(const S &_inputMsgs){
@@ -124,7 +124,7 @@ namespace reef_msgs{
     template<class S, class T>
     T fromRodriguezParameterToEulerAngle(const S &_inputMsgs, const std::string &_eulerTransformation){
         reef_msgs::RodriguezParameter inputAngle = reef_msgs::fromAnyTypeToRodriguezParameter<S>(_inputMsgs);
-        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation)));
+        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation),_eulerTransformation));
     }
     template<class S, class T>
     T fromRodriguezParameterToQuaternion(const S &_inputMsgs){
@@ -150,7 +150,7 @@ namespace reef_msgs{
     template<class S, class T>
     T fromRotationMatrixToEulerAngle(const S &_inputMsgs, const std::string &_eulerTransformation){
         reef_msgs::RotationMatrix inputAngle = reef_msgs::fromAnyTypeToRotationMatrix<S>(_inputMsgs);
-        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation)));
+        return  reef_msgs::fromEulerAngleToAnyType<T>(reef_msgs::EulerAngle(inputAngle.toEulerAngle(_eulerTransformation),_eulerTransformation));
 
     }
     template<class S, class T>
