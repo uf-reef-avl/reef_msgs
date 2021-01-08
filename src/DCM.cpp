@@ -78,59 +78,73 @@ namespace reef_msgs {
     }
 
     auto DCM::toAxisAngle() -> Eigen::Matrix<double, 4, 1> {
-        Eigen::Matrix<double, 4, 1> q;
+        auto cp = (m_DCM.trace()-1)/2;
+        auto p = acos(cp);
+        auto sp = p/2/sin(p);
+        Eigen::Matrix<double,4,1> q;
 
-        double tr = m_DCM.trace();
-        Eigen::Matrix<double, 4, 1> b2;
-        b2(0, 0) = (1 + tr) / 4;
-        b2(1, 0) = (1 + 2 * m_DCM(0, 0) - tr) / 4;
-        b2(2, 0) = (1 + 2 * m_DCM(1, 1) - tr) / 4;
-        b2(3, 0) = (1 + 2 * m_DCM(2, 2) - tr) / 4;
-        int maxIndex = 0;
-        double max = b2[0];
-        for (int i = 0; i < 4; i++) {
-            if (b2(i, 0) > max) {
-                max = b2(i, 0);
-                maxIndex = i;
-            }
-        }
-        Eigen::Matrix<double, 4, 1> b;
-        b << b2;
-        if (maxIndex == 0) {
-            b(0, 0) = sqrt(b2(0, 0));
-            b(1, 0) = (m_DCM(1, 2) - m_DCM(2, 1)) / 4 / b(0, 0);
-            b(2, 0) = (m_DCM(2, 0) - m_DCM(0, 2)) / 4 / b(0, 0);
-            b(3, 0) = (m_DCM(0, 1) - m_DCM(1, 0)) / 4 / b(0, 0);
-        } else if (maxIndex == 1) {
-            b(1, 0) = sqrt(b2(1, 0));
-            b(0, 0) = (m_DCM(1, 2) - m_DCM(2, 1)) / 4 / b(1, 0);
-            if (b(0, 0) < 0) {
-                b(1, 0) = -b(1, 0);
-                b(0, 0) = -b(0, 0);
-                b(2, 0) = (m_DCM(0, 1) + m_DCM(1, 0)) / 4 / b(1, 0);
-                b(3, 0) = (m_DCM(2, 0) + m_DCM(0, 2)) / 4 / b(1, 0);
-            }
-        } else if (maxIndex == 2) {
-            b(2, 0) = sqrt(b2(2, 0));
-            b(0, 0) = (m_DCM(2, 0) - m_DCM(0, 2)) / 4 / b(2, 0);
-            if (b(0, 0) < 0) {
-                b(2, 0) = -b(2, 0);
-                b(0, 0) = -b(0, 0);
-                b(1, 0) = (m_DCM(0, 1) + m_DCM(1, 0)) / 4 / b(2, 0);
-                b(3, 0) = (m_DCM(1, 2) + m_DCM(2, 1)) / 4 / b(2, 0);
-            }
-        } else if (maxIndex == 3) {
-            b(3, 0) = sqrt(b2[3, 0]);
-            b(0, 0) = (m_DCM(0, 1) - m_DCM(1, 0)) / 4 / b(3, 0);
-            if (b(0, 0) < 0) {
-                b(3, 0) = -b(3, 0);
-                b(0, 0) = -b(0, 0);
-                b(1, 0) = (m_DCM(2, 0) + m_DCM(0, 2)) / 4 / b(3, 0);
-                b(2, 0) = (m_DCM(1, 2) + m_DCM(2, 1)) / 4 / b(3, 0);
-            }
-        }
-        return b;
+        auto x = (m_DCM(2,0) - m_DCM(0,2))*sp;
+        auto y = (m_DCM(0,1) - m_DCM(1,0))*sp;
+        auto z = sqrt( 1  - x*x - y*y);
+        auto phi = (m_DCM(1,2) - m_DCM(2,1))*sp;
+        q << x,y,z,phi;
+        return q;
     }
+
+//    //to quaternion in fact
+//    auto DCM::toQuaternion() -> Eigen::Matrix<double, 4, 1> {
+//        Eigen::Matrix<double, 4, 1> q;
+//        double tr = m_DCM.trace();
+//        Eigen::Matrix<double, 4, 1> b2;
+//        b2(0, 0) = (1 + tr) / 4;
+//        b2(1, 0) = (1 + 2 * m_DCM(0, 0) - tr) / 4;
+//        b2(2, 0) = (1 + 2 * m_DCM(1, 1) - tr) / 4;
+//        b2(3, 0) = (1 + 2 * m_DCM(2, 2) - tr) / 4;
+//        int maxIndex = 0;
+//        double max = b2[0];
+//        for (int i = 0; i < 4; i++) {
+//            if (b2(i, 0) > max) {
+//                max = b2(i, 0);
+//                maxIndex = i;
+//            }
+//        }
+//        Eigen::Matrix<double, 4, 1> b;
+//        b << b2;
+//        if (maxIndex == 0) {
+//            b(0, 0) = sqrt(b2(0, 0));
+//            b(1, 0) = (m_DCM(1, 2) - m_DCM(2, 1)) / 4 / b(0, 0);
+//            b(2, 0) = (m_DCM(2, 0) - m_DCM(0, 2)) / 4 / b(0, 0);
+//            b(3, 0) = (m_DCM(0, 1) - m_DCM(1, 0)) / 4 / b(0, 0);
+//        } else if (maxIndex == 1) {
+//            b(1, 0) = sqrt(b2(1, 0));
+//            b(0, 0) = (m_DCM(1, 2) - m_DCM(2, 1)) / 4 / b(1, 0);
+//            if (b(0, 0) < 0) {
+//                b(1, 0) = -b(1, 0);
+//                b(0, 0) = -b(0, 0);
+//                b(2, 0) = (m_DCM(0, 1) + m_DCM(1, 0)) / 4 / b(1, 0);
+//                b(3, 0) = (m_DCM(2, 0) + m_DCM(0, 2)) / 4 / b(1, 0);
+//            }
+//        } else if (maxIndex == 2) {
+//            b(2, 0) = sqrt(b2(2, 0));
+//            b(0, 0) = (m_DCM(2, 0) - m_DCM(0, 2)) / 4 / b(2, 0);
+//            if (b(0, 0) < 0) {
+//                b(2, 0) = -b(2, 0);
+//                b(0, 0) = -b(0, 0);
+//                b(1, 0) = (m_DCM(0, 1) + m_DCM(1, 0)) / 4 / b(2, 0);
+//                b(3, 0) = (m_DCM(1, 2) + m_DCM(2, 1)) / 4 / b(2, 0);
+//            }
+//        } else if (maxIndex == 3) {
+//            b(3, 0) = sqrt(b2[3, 0]);
+//            b(0, 0) = (m_DCM(0, 1) - m_DCM(1, 0)) / 4 / b(3, 0);
+//            if (b(0, 0) < 0) {
+//                b(3, 0) = -b(3, 0);
+//                b(0, 0) = -b(0, 0);
+//                b(1, 0) = (m_DCM(2, 0) + m_DCM(0, 2)) / 4 / b(3, 0);
+//                b(2, 0) = (m_DCM(1, 2) + m_DCM(2, 1)) / 4 / b(3, 0);
+//            }
+//        }
+//        return b;
+//    }
 
     auto DCM::toQuaternion() -> Eigen::Matrix<double, 4, 1> {
         auto gamma = m_DCM.trace();

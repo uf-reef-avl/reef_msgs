@@ -72,9 +72,9 @@ namespace reef_msgs {
     auto RodriguezParameter::toQuaternion() -> Eigen::Matrix<double, 4, 1> {
         Eigen::Matrix<double, 4, 1> q;
         q(3, 0) = 1 / sqrt(1 + (m_parameter.transpose() * m_parameter)(0, 0));
-        q(0, 0) = m_parameter(0, 0) * q(0, 0);
-        q(1, 0) = m_parameter(1, 0) * q(0, 0);
-        q(2, 0) = m_parameter(2, 0) * q(0, 0);
+        q(0, 0) = m_parameter(0, 0) * q(3, 0);
+        q(1, 0) = m_parameter(1, 0) * q(3, 0);
+        q(2, 0) = m_parameter(2, 0) * q(3, 0);
 
         return q;
 

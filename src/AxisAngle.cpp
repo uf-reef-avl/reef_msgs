@@ -78,12 +78,20 @@ namespace reef_msgs {
         setAxisAngle(_axis, _angle);
     }
 
-    auto AxisAngle::normalized() -> Eigen::Matrix<double, 4, 1> {
+    void AxisAngle::normalize()  {
+        auto norm = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(2, 0)*m_axisAngle(2, 0)) ;
+        m_axisAngle(0, 0) = m_axisAngle(0, 0) / norm;
+        m_axisAngle(1, 0) = m_axisAngle(1, 0) / norm;
+        m_axisAngle(2, 0) = m_axisAngle(2, 0) / norm;
+    }
+
+    auto AxisAngle::toPrincipalRotationElement() -> Eigen::Matrix<double, 4, 1> {
+        //we use another convention for this
         Eigen::Matrix<double, 4, 1> q;
-        q(3, 0) = sqrt((m_axisAngle.transpose() * m_axisAngle)(0, 0));
-        q(0, 0) = m_axisAngle(0, 0) / q(0, 0);
-        q(1, 0) = m_axisAngle(1, 0) / q(0, 0);
-        q(2, 0) = m_axisAngle(2, 0) / q(0, 0);
+        q(0,0) = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(3, 0)*m_axisAngle(3, 0)) ;
+        q(1,0) = m_axisAngle(3, 0) / q(0,0);
+        q(2,0) = m_axisAngle(0, 0) / q(0,0);
+        q(3,0) = m_axisAngle(1, 0) / q(0,0);
         return q;
     }
 
@@ -99,31 +107,33 @@ namespace reef_msgs {
 
     auto AxisAngle::toQuaternion() -> Eigen::Matrix<double, 4, 1> {
         Eigen::Matrix<double, 4, 1> q;
-        auto q1 = normalized();
-        auto sp = sin(q1(3, 0) / 2);
-        q(3, 0) = cos(q1(3, 0) / 2);
-        q(0, 0) = q1(0, 0) * sp;
-        q(1, 0) = q1(1, 0) * sp;
-        q(2, 0) = q1(2, 0) * sp;
+        auto q1 = toPrincipalRotationElement();
+        auto sp = sin(q1(0, 0) / 2);
+        //rework this hackich way to recreate proper quaternion convention (x,y,z,w) instead of (w,x,y,z)
+        q(3, 0) = cos(q1(0, 0) / 2);
+        q(0, 0) = q1(1, 0) * sp;
+        q(1, 0) = q1(2, 0) * sp;
+        q(2, 0) = q1(3, 0) * sp;
+
         return q;
     }
 
     auto AxisAngle::toRodriguezParameter() -> Eigen::Matrix<double, 3, 1> {
-        Eigen::Matrix<double, 4, 1> q1 = normalized();
-        auto tp = tan(q1(3, 0) / 2);
+        Eigen::Matrix<double, 4, 1> q1 = toPrincipalRotationElement();
+        auto tp = tan(q1(0, 0) / 2);
         Eigen::Matrix<double, 3, 1> q;
-        q(0, 0) = q1(0, 0) * tp;
-        q(1, 0) = q1(1, 0) * tp;
-        q(2, 0) = q1(2, 0) * tp;
+        q(0, 0) = q1(1, 0) * tp;
+        q(1, 0) = q1(2, 0) * tp;
+        q(2, 0) = q1(3, 0) * tp;
 
         return q;
     }
 
     auto AxisAngle::toDCM() -> Eigen::Matrix3d {
-        auto q0 = sqrt(m_axisAngle.transpose() * m_axisAngle);
-        auto q1 = m_axisAngle(0, 0) / q0;
-        auto q2 = m_axisAngle(1, 0) / q0;
-        auto q3 = m_axisAngle(2, 0) / q0;
+        auto q0 = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(3, 0)*m_axisAngle(3, 0)) ;
+        auto q1 = m_axisAngle(3, 0) / q0;
+        auto q2 = m_axisAngle(0, 0) / q0;
+        auto q3 = m_axisAngle(1, 0) / q0;
 
         auto cp = cos(q0);
         auto sp = sin(q0);

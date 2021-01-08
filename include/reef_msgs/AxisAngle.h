@@ -11,6 +11,7 @@ namespace reef_msgs {
     public:
 
     public:
+        //add checking magnitude == 1 and generate z if not present
         AxisAngle(const double &_x, const double &_y, const double &_z, const double &_angle);
         AxisAngle(const Eigen::Matrix<double, 3, 1> &_axis, const double &_angle);
         AxisAngle(const Eigen::Matrix<double, 4, 1> &_axisAngle);
@@ -29,7 +30,8 @@ namespace reef_msgs {
         auto angle() const -> double;
         void setAngle(const double &_angle);
 
-        auto normalized() -> Eigen::Matrix<double,4,1>;
+        void normalize();
+        auto toPrincipalRotationElement() -> Eigen::Matrix<double,4,1>;
         auto toEulerAngle(const std::string &_eulerTransformation ="321") -> Eigen::Matrix<double,3,1>;
         auto toRotationMatrix() -> Eigen::Matrix3d;
         auto toQuaternion() -> Eigen::Matrix<double,4,1>;
