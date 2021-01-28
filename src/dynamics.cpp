@@ -3,7 +3,6 @@
 //
 
 #include "../include/reef_msgs/dynamics.h"
-#include "../include/reef_msgs/Quaternion.h"
 namespace reef_msgs
 {
 
@@ -65,12 +64,33 @@ void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geomet
   q.z = quat_mat(3);
 }
 
+Eigen::Matrix3d quaternion_to_rotation(Eigen::Quaterniond q)
+{
+  Eigen::Matrix3d I;
+  I.setIdentity();
+
+  Eigen::Matrix3d skew_mat = skew(Eigen::Vector3d(q.x(), q.y(), q.z()));
+  Eigen::Matrix3d rotation_matrix = I - 2 * q.w() * skew_mat + 2 * skew_mat * skew_mat;
+
+  return rotation_matrix;
+}
+
+Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q)
+{
+  Eigen::Quaterniond q_temp;
+  q_temp.x() = q.x;
+  q_temp.y() = q.y;
+  q_temp.z() = q.z;
+  q_temp.w() = q.w;
+
+  return quaternion_to_rotation(q_temp);
+}
 
 Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double yaw)
 {
   Eigen::Quaterniond q;
   quaternion_from_roll_pitch_yaw(roll,pitch, yaw, q);
-  return Quaternion::quaternionToRotation(q);
+  return quaternion_to_rotation(q);
 }
 
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pitch, double& yaw)
@@ -83,7 +103,7 @@ void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pi
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy){
   rpy(0) = atan2(C(1,2),C(2,2)); //roll
   rpy(1) = -asin(C(0,2)); // pitch
-  rpy(2) = atan2(C(0,1),C(0,0)); // yaw
+  rpy(2) = atan2(C(0,1),C(0,0)); // pitch
 }
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
@@ -96,7 +116,37 @@ Eigen::Matrix4d Omega(Eigen::Vector3d pqr)
   return omega;
 }
 
+Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q)
+{
+  double pw = p(3,0);
 
+  Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
+  Eigen::Matrix3d p_skew;
+  p_skew = skew(p.head(3));
+
+  Eigen::Matrix4d A;
+  A.block<3,3>(0,0) = pw * I * p_skew;
+  A.block<4,1>(0,3) = p;
+  A.block<1,4>(3,0) = -p.transpose();
+  A(3,3) = pw;
+
+  return A*q;
+}
+
+Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q)
+{
+  Eigen::Matrix<double,4,1> p_temp;
+  Eigen::Matrix<double,4,1> q_temp;
+  Eigen::Matrix<double,4,1> multiplicant;
+
+  p_temp = quat2vector(p);
+  q_temp = quat2vector(q);
+
+  multiplicant = quaternionMultiplication(p_temp,q_temp);
+
+  return vector2quat(multiplicant);
+
+}
 
 
 Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in)

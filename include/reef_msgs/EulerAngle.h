@@ -59,6 +59,7 @@ namespace reef_msgs {
         @return a string which corresponds to the rotation order of the euler angle
         */
         auto getEulerTransformation() const -> const std::string &;
+        // TODO: finish documentation on euler angle
         auto yaw() const -> double;
         void setYaw(const double &_yaw);
         auto pitch() const -> double;

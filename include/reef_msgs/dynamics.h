@@ -4,6 +4,7 @@
 #pragma once
 #ifndef PROJECT_DYNAMICS_H
 #define PROJECT_DYNAMICS_H
+
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <ros/ros.h>
@@ -21,7 +22,8 @@ Eigen::Matrix<double,4,1> quaternion_from_roll_pitch_yaw(double phi, double thet
 void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, Eigen::Quaterniond& q);
 void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geometry_msgs::Quaternion& q);
 
-
+Eigen::Matrix3d quaternion_to_rotation(Eigen::Quaterniond q);
+Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q);
 
 Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double yaw);
 Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy);
@@ -31,6 +33,8 @@ void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy);
 
 Eigen::Matrix4d Omega(Eigen::Vector3d pqr);
 
+Eigen::Matrix<double,4,1> quaternionMultiplication(Eigen::Matrix<double,4,1> p,Eigen::Matrix<double,4,1> q);
+Eigen::Quaterniond quaternionMultiplication(Eigen::Quaterniond p , Eigen::Quaterniond q);
 
 Eigen::Quaterniond vector2quat(Eigen::Matrix<double, 4,1> mat_in);
 Eigen::Matrix<double, 4,1> quat2vector(Eigen::Quaterniond q_in);
