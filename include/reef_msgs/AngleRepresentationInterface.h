@@ -16,9 +16,26 @@
 namespace reef_msgs{
     class AngleRepresentationInterface {
         public:
+            /*!
+            @brief Constructor of a angle representation interface
+            @return newly created angle representation interface
+            */
             AngleRepresentationInterface() {};
+            /*!
+            @brief Copy constructor of a angle representation interface
+            @param[in] _other  the angle representation instance to copy
+            @return newly created angle representation interface based on the copy of the input
+            */
             AngleRepresentationInterface(const AngleRepresentationInterface & _other);
+            /*!
+            @brief Copy constructor of a angle representation interface thought the overload of the = operator
+            @param[in] _other  the angle representation instance to copy
+            @return newly created angle representation interface based on the copy of the input
+            */
             AngleRepresentationInterface& operator=(const AngleRepresentationInterface & _other);
+            /*!
+            @brief Virtual destructor which allow polymorphism and inheritance
+            */
             virtual ~AngleRepresentationInterface() = default;
 
 
