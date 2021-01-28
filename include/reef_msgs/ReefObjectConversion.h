@@ -9,6 +9,8 @@
 #include "EulerAngle.h"
 #include "DCM.h"
 #include "AxisAngle.h"
+#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Geometry>
 
 namespace reef_msgs{
     template<class T>

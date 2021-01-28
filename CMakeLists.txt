@@ -65,7 +65,7 @@ add_library(reef_msgs
             src/DCM.cpp include/reef_msgs/DCM.h
             src/RotationMatrix.cpp
             include/reef_msgs/RotationMatrix.h
-        include/reef_msgs/ReefMsgsConversionAPI.h src/ReefMsgsConversionAPI.cpp)
+        include/reef_msgs/ReefMsgsConversionAPI.h)
 
 add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
 
