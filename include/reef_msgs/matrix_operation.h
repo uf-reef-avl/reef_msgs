@@ -1,12 +1,13 @@
 //
 // Created by prashant on 2/28/19.
 //
-
+#pragma once
 #ifndef PROJECT_MATRIX_OPERATION_H
 #define PROJECT_MATRIX_OPERATION_H
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <ros/ros.h>
+#include <tf/tf.h>
 
 namespace reef_msgs
 {
@@ -84,6 +85,17 @@ void verifyDimensions(const Eigen::MatrixBase<Derived> &mat, std::string name, i
 {
   ROS_ASSERT_MSG( mat.rows() == rows &&  mat.cols() == cols ,
                   "%s is %dx%d. Expecting %dx%d",name.c_str(),(int) mat.rows(), (int) mat.cols(),rows,cols);
+}
+
+inline Eigen::Affine3d tf2Eigen(const tf::StampedTransform transform)
+{
+    Eigen::Affine3d temp;
+    temp.translation() << transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z();
+
+    Eigen::Quaterniond quat_temp(transform.getRotation().getW(), transform.getRotation().getX(), transform.getRotation().getY(), transform.getRotation().getZ());
+    temp.linear() = quat_temp.toRotationMatrix();
+
+    return temp;
 }
 
 
