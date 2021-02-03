@@ -17,6 +17,8 @@
   <depend>std_msgs</depend>
   <depend>tf2_eigen</depend>
   <depend>tf</depend>
+  <depend>eigen</depend>
+  <depend>eigen3</depend>
   <depend>message_generation</depend>
   <depend>message_runtime</depend>
 
