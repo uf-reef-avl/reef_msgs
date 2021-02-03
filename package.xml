@@ -16,6 +16,7 @@
   <depend>rospy</depend>
   <depend>std_msgs</depend>
   <depend>tf2_eigen</depend>
+  <depend>tf</depend>
   <depend>message_generation</depend>
   <depend>message_runtime</depend>
 
