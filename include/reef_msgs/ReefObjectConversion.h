@@ -13,6 +13,23 @@
 #include <eigen3/Eigen/Geometry>
 
 namespace reef_msgs{
+    /*!
+    @brief Generate a reef_msgs quaternion from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs quaternion. Right now, the type supported are:
+     geometry_msgs::Quaternion,
+     geometry_msgs::QuaternionStamped,
+     Eigen::Quaterniond,
+     Eigen::Matrix<double,4, 1>,
+     Eigen::Vector4d ,
+     Eigen::Matrix<float,4, 1>,
+     Eigen::Vector4f,
+     std::vector<double>,
+     std::vector<float>,
+     tf2::Quaternion,
+     geometry_msgs::Transform,
+     geometry_msgs::TransformStamped,
+    @return the reef_mgs quaternion instancy created
+    */
     template<class T>
     reef_msgs::Quaternion fromAnyTypeToQuaternion(const T &_msgs ){
         double x,y,z,w;
@@ -66,16 +83,22 @@ namespace reef_msgs{
         }
         return reef_msgs::Quaternion(x,y,z,w);
     }
+    /*!
+    @brief Generate a reef_msgs axisangle from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs axiangle. Right now, the type supported are:
+     Eigen::Matrix<double,4, 1>,
+     Eigen::Vector4d ,
+     Eigen::Matrix<float,4, 1>,
+     Eigen::Vector4f,
+     std::vector<double>,
+     std::vector<float>,
+    @return the reef_mgs axisangle instancy created
+    */
     template<class T>
     reef_msgs::AxisAngle fromAnyTypeToAxisAngle(const T &_msgs ){
         double x,y,z,angle;
 
-        if constexpr(std::is_same<geometry_msgs::QuaternionStamped, T>::value) {
-            x = _msgs.quaternion.x;
-            y = _msgs.quaternion.y;
-            z = _msgs.quaternion.z;
-            angle = _msgs.quaternion.w;
-        }else if constexpr((std::is_same<Eigen::Matrix<double,4, 1>, T>::value)
+        if constexpr((std::is_same<Eigen::Matrix<double,4, 1>, T>::value)
                            || (std::is_same<Eigen::Vector4d , T>::value)
                            || (std::is_same<Eigen::Matrix<float,4, 1>, T>::value)
                            || (std::is_same<Eigen::Vector4f, T>::value) ) {
@@ -94,7 +117,15 @@ namespace reef_msgs{
         }
         return reef_msgs::AxisAngle(x,y,z,angle);
     }
-
+    /*!
+    @brief Generate a reef_msgs DCM from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs DCM. Right now, the type supported are:
+     Eigen::Matrix3d,
+     Eigen::Matrix3f,
+     Eigen::Matrix<double,3,3>,
+     Eigen::Matrix<float,3,3>,
+    @return the reef_mgs DCM instancy created
+    */
     template<class T>
     reef_msgs::DCM fromAnyTypeToDCM(const T &_msgs ){
         Eigen::Matrix3d mat;
@@ -108,7 +139,18 @@ namespace reef_msgs{
         }
         return reef_msgs::DCM(mat);
     }
-
+    /*!
+    @brief Generate a reef_msgs euler angle from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs euler angle. Right now, the type supported are:
+     geometry_msgs::Vector3,
+     geometry_msgs::Vector3Stamped,
+     Eigen::Matrix<double,3, 1>,
+     Eigen::Matrix<float,3, 1>,
+     Eigen::Vector3d,
+     Eigen::Vector3f,
+     @param[in] _eulerTransformation  the rotation order applied on the euler angle
+    @return the reef_mgs euler angle instancy created
+    */
     template<class T>
     reef_msgs::EulerAngle fromAnyTypeToEulerAngle(const T &_msgs , const std::string &_eulerTransformation){
         double yaw,pitch,roll;
@@ -116,7 +158,7 @@ namespace reef_msgs{
             yaw = _msgs.x;
             pitch = _msgs.y;
             roll = _msgs.z;
-        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped, T>::value) {
             yaw = _msgs.vector.x;
             pitch = _msgs.vector.y;
             roll = _msgs.vector.z;
@@ -138,7 +180,20 @@ namespace reef_msgs{
         return reef_msgs::EulerAngle(yaw,pitch,roll,_eulerTransformation);
 
     }
-
+    /*!
+    @brief Generate a reef_msgs rodriguez parameter from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs rodriguez parameter angle. Right now, the type supported are:
+     geometry_msgs::Vector3,
+     geometry_msgs::Vector3Stamped,
+     Eigen::Matrix<double,3, 1>,
+     Eigen::Matrix<float,3, 1>,
+     Eigen::Vector3d,
+     Eigen::Vector3f,
+     std::vector<double>,
+     std::vector<float>,
+     @param[in] _eulerTransformation  the rotation order applied on the euler angle
+    @return the reef_mgs euler angle instancy created
+    */
     template<class T>
     reef_msgs::RodriguezParameter fromAnyTypeToRodriguezParameter(const T &_msgs ){
         double x,y,z;
@@ -167,7 +222,15 @@ namespace reef_msgs{
         }
         return reef_msgs::RodriguezParameter(x,y,z);
     }
-
+    /*!
+    @brief Generate a reef_msgs rotation matrix from differents type of messages
+    @param[in] msgs the msgs to be turn into a reef_msgs rotation matrix. Right now, the type supported are:
+     Eigen::Matrix3d,
+     Eigen::Matrix3f,
+     Eigen::Matrix<double,3,3>,
+     Eigen::Matrix<float,3, 3>,
+    @return the reef_mgs rotation matrix instancy created
+    */
     template<class T>
     reef_msgs::RotationMatrix fromAnyTypeToRotationMatrix(const T &_msgs ){
         Eigen::Matrix3d mat;
@@ -181,6 +244,23 @@ namespace reef_msgs{
         }
         return reef_msgs::RotationMatrix(mat);
     }
+    /*!
+    @brief transform a reef_msgs quaternion to another possible quaternion c++ type
+    @param[in] _Quaternion the quaternion to be transformed
+    @return the c++ type returned . Right now, the type supported are:
+    geometry_msgs::Quaternion,
+    geometry_msgs::QuaternionStamped,
+    Eigen::Quaterniond,
+    Eigen::Matrix<double,4, 1>,
+    Eigen::Vector4d ,
+    Eigen::Matrix<float,4, 1>,
+    Eigen::Vector4f,
+    std::vector<double>,
+    std::vector<float>,
+    tf2::Quaternion,
+    geometry_msgs::Transform,
+    geometry_msgs::TransformStamped,
+    */
     template<class T>
     T fromQuaternionToAnyType(const reef_msgs::Quaternion &_Quaternion){
         if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
@@ -248,6 +328,18 @@ namespace reef_msgs{
                 throw "This type isn't defined";
         }
     }
+
+    /*!
+    @brief transform a reef_msgs axiangle to another possible axis angle c++ type
+    @param[in] _axisAngle the axisangle to be transformed
+    @return the c++ type returned . Right now, the type supported are:
+    Eigen::Matrix<double,4, 1>,
+    Eigen::Vector4d ,
+    Eigen::Matrix<float,4, 1>,
+    Eigen::Vector4f,
+    std::vector<double>,
+    std::vector<float>,
+    */
     template<class T>
     T fromAxisAngleToAnyType(const reef_msgs::AxisAngle &_axisAngle){
 
@@ -279,7 +371,15 @@ namespace reef_msgs{
             throw "This type isn't defined";
         }
     }
-
+    /*!
+    @brief transform a reef_msgs DCM to another possible DCM c++ type
+    @param[in] _DCM the DCM to be transformed
+    @return the c++ type returned . Right now, the type supported are:
+    Eigen::Matrix<double,3, 3>,
+    Eigen::Matrix3d ,
+    Eigen::Matrix<float,3, 3>,
+    Eigen::Matrix3f,
+    */
     template<class T>
     T fromDCMToAnyType(const reef_msgs::DCM &_DCM){
         if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
@@ -297,10 +397,22 @@ namespace reef_msgs{
             throw "This type isn't defined";
         }
     }
-
+    /*!
+    @brief transform a reef_msgs euler angle to another possible euler angle c++ type
+    @param[in] _eulerAngle the eulerangle to be transformed
+    @return the c++ type returned . Right now, the type supported are:
+     geometry_msgs::Vector3,
+    geometry_msgs::Vector3Stamped,
+    Eigen::Matrix<double,3, 1>,
+    Eigen::Vector3d ,
+    Eigen::Matrix<float,3, 1>,
+    Eigen::Vector3f,
+    std::vector<double>,
+    std::vector<float>,
+    */
     template<class T>
     T fromEulerAngleToAnyType(const reef_msgs::EulerAngle &_eulerAngle){
-        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+        if constexpr(std::is_same<geometry_msgs::Vector3, T>::value){
             geometry_msgs::Vector3 outputAngle;
             outputAngle.x = _eulerAngle.yaw();
             outputAngle.y = _eulerAngle.pitch();
@@ -333,11 +445,63 @@ namespace reef_msgs{
             throw "This type isn't defined";
         }
     }
-
+    /*!
+    @brief transform a reef_msgs Rodriguez parameter to another possible rodriguez parameter c++ type
+    @param[in] _rodriguezParameter the rodriguez parameter to be transformed
+    @return the c++ type returned.  Right now, the type supported are:
+     geometry_msgs::Vector3,
+     geometry_msgs::Vector3Stamped,
+     Eigen::Matrix<double,3, 1>,
+     Eigen::Matrix<float,3, 1>,
+     Eigen::Vector3d,
+     Eigen::Vector3f,
+     std::vector<double>,
+     std::vector<float>,
+    */
     template<class T>
     T fromRodriguezParameterToAnyType(const reef_msgs::RodriguezParameter &_rodriguezParameter){
-
+        if constexpr(std::is_same<geometry_msgs::Vector3, T>::value){
+            geometry_msgs::Vector3 outputAngle;
+            outputAngle.x = _rodriguezParameter.x();
+            outputAngle.y = _rodriguezParameter.y();
+            outputAngle.z = _rodriguezParameter.z();
+            return outputAngle;
+        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+            geometry_msgs::Vector3Stamped outputAngle;
+            outputAngle.vector.x = _rodriguezParameter.x();
+            outputAngle.vector.y = _rodriguezParameter.y();
+            outputAngle.vector.z = _rodriguezParameter.z();
+            return outputAngle;
+        }else if constexpr((std::is_same<Eigen::Matrix<double,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3d , T>::value)){
+            Eigen::Matrix<double,3, 1> outputAngle;
+            outputAngle << _rodriguezParameter.getParameter();
+            return outputAngle;
+        }else if constexpr((std::is_same<Eigen::Matrix<float,3, 1>, T>::value)
+                           || (std::is_same<Eigen::Vector3f, T>::value) ) {
+            Eigen::Matrix<float,3, 1> outputAngle;
+            outputAngle << _rodriguezParameter.getParameter();
+            return outputAngle;
+        }else if constexpr((std::is_same<std::vector<double>, T>::value)
+                           || (std::is_same<std::vector<float>, T>::value)) {
+            std::vector<double> outputAngle;
+            outputAngle.push_back(_rodriguezParameter.x());
+            outputAngle.push_back(_rodriguezParameter.y());
+            outputAngle.push_back(_rodriguezParameter.z());
+            return outputAngle;
+        } else{
+            throw "This type isn't defined";
+        }
     }
+    /*!
+    @brief transform a reef_msgs Rotation matrix to another possible rotation matrix c++ type
+    @param[in] _rotationMatrix the rotation matrix to be transformed
+    @return the c++ type returned . Right now, the type supported are:
+    Eigen::Matrix<double,3, 3>,
+    Eigen::Matrix3d ,
+    Eigen::Matrix<float,3, 3>,
+    Eigen::Matrix3f,
+    */
     template<class T>
     T fromRotationMatrixToAnyType(const reef_msgs::RotationMatrix &_rotationMatrix){
         if constexpr((std::is_same<Eigen::Matrix3d, T>::value)
