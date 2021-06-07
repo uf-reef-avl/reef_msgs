@@ -65,7 +65,7 @@ add_library(reef_msgs
             src/DCM.cpp include/reef_msgs/DCM.h
             src/RotationMatrix.cpp
             include/reef_msgs/RotationMatrix.h
-        include/reef_msgs/ReefMsgsConversionAPI.h)
+        include/reef_msgs/ReefMsgsConversionAPI.h src/OdomNWU2PoseStampedNEDNode.cpp)
 
 add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
 
@@ -73,3 +73,9 @@ add_subdirectory(test)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(reef_msgs ${catkin_LIBRARIES})
+
+add_executable(OdomNWU2PoseStampedNED_node
+        src/OdomNWU2PoseStampedNEDNode.cpp
+        )
+
+target_link_libraries(OdomNWU2PoseStampedNED_node ${catkin_LIBRARIES})
