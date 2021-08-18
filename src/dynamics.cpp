@@ -196,3 +196,55 @@ Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy)
 }
 
 }
+    Eigen::Quaterniond DCM2quat(const Eigen::Matrix3d C) {
+/*    Use Sheppard's algorithm to convert from direction cosine matrix to
+    quaternion. See Hurtado, J.E., Kinematic and Kinetic Principles.
+    */
+        float gam = C.trace();
+        float w2 = (1.0 + gam) / 4.;
+        Eigen::Matrix<double,4,1>  q2;
+        q2(0) = (1 + 2 * C(0,0) - gam) / 4.;
+        q2(1) = (1 + 2 * C(1,1) - gam) / 4.;
+        q2(2) = (1 + 2 * C(2,2) - gam) / 4.;
+        q2(3) = w2;
+        int max_index = q2.maxCoeff();
+        Eigen::Matrix<double,4,1>  q;
+        q << 0,0,0,0;
+        q(max_index) = sqrt(q2(max_index));
+        float d = 4. * q(max_index);
+        float C11 = C(0,0);
+        float C12 = C(0,1);
+        float C13 = C(0,2);
+        float C21 = C(1,0);
+        float C22 = C(1,1);
+        float C23 = C(1,2);
+        float C31 = C(2,0);
+        float C32 = C(2,1);
+        float C33 = C(2,2);
+        if (max_index == 3){
+            q(0) = (C23 - C32) / d;
+            q(1) = (C31 - C13) / d;
+            q(2) = (C12 - C21) / d;
+        }
+        else if (max_index == 0) {
+            q(3) = (C23 - C32) / d;
+            q(1) = (C12 + C21) / d;
+            q(2) = (C31 + C13) / d;
+        }
+        else if (max_index == 1) {
+            q(3) = (C31 - C13) / d;
+            q(0) = (C12 + C21) / d;
+            q(2) = (C23 + C32) / d;
+        }
+        else if (max_index == 2){
+            q(3) = (C12 - C21) / d;
+            q(0) = (C31 + C13) / d;
+            q(1) = (C23 + C32) / d;
+        }
+        Eigen::Quaterniond quat;
+        quat.coeffs()<<q(0),q(1),q(2),q(3);
+        quat.normalize();
+        return quat;
+    }
+
+}

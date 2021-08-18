@@ -27,7 +27,7 @@ Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q);
 
 Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double yaw);
 Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy);
-
+Eigen::Quaterniond DCM2quat(const Eigen::Matrix3d C) ;
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, double& roll, double& pitch, double& yaw );
 void roll_pitch_yaw_from_rotation321(Eigen::Matrix3d C, Eigen::Vector3d &rpy);
 
