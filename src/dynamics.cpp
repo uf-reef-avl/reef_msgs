@@ -195,7 +195,6 @@ Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy)
     return C1*C2*C3;
 }
 
-}
     Eigen::Quaterniond DCM2quat(const Eigen::Matrix3d C) {
 /*    Use Sheppard's algorithm to convert from direction cosine matrix to
     quaternion. See Hurtado, J.E., Kinematic and Kinetic Principles.
