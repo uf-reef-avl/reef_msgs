@@ -31,6 +31,12 @@ add_message_files(
         SyncEstimateError.msg
 )
 
+
+add_service_files(
+   FILES
+   GpsPosition.srv
+   )
+
 generate_messages(
         DEPENDENCIES
         geometry_msgs
