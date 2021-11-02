@@ -75,7 +75,7 @@ add_library(reef_msgs
 
 add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
 
-add_subdirectory(test)
+#add_subdirectory(test)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(reef_msgs ${catkin_LIBRARIES})
