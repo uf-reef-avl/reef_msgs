@@ -7,5 +7,9 @@ float64 pitch_bias
 float64 roll_bias
 float64 xa_bias
 float64 ya_bias
+float64 gx_bias
+float64 gy_bias
+float64 gz_bias
+
 float64[12] sigma_plus
 float64[12] sigma_minus
