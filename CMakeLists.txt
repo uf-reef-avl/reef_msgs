@@ -1,87 +1,99 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(reef_msgs)
 
-#set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+   set(CMAKE_C_STANDARD 99)
+endif()
 
-set(CMAKE_CXX_STANDARD 17)
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+   set(CMAKE_CXX_STANDARD 14)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS
-        message_generation
-        geometry_msgs
-        roscpp
-        rospy
-        std_msgs
-        tf2_eigen
-        tf2
-)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+
+find_package(geometry_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-add_message_files(
-        FILES
-        DesiredVector.msg
-        DesiredState.msg
-        DeltaToVel.msg
-        XYEstimate.msg
-        XYDebugEstimate.msg
-        ZEstimate.msg
-        ZDebugEstimate.msg
-        XYZEstimate.msg
-        XYZDebugEstimate.msg
-        SyncVerifyEstimates.msg
-        SyncEstimateError.msg
+if(BUILD_TESTING)
+   find_package(ament_lint_auto REQUIRED)
+   # the following line skips the linter which checks for copyrights
+   # uncomment the line when a copyright and license is not present in all source files
+   #set(ament_cmake_copyright_FOUND TRUE)
+   # the following line skips cpplint (only works in a git repo)
+   # uncomment the line when this package is not in a git repo
+   #set(ament_cmake_cpplint_FOUND TRUE)
+   ament_lint_auto_find_test_dependencies()
+endif()
+
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+        "msg/DesiredVector.msg"
+        "msg/DesiredState.msg"
+        "msg/DeltaToVel.msg"
+        "msg/XYEstimate.msg"
+        "msg/XYDebugEstimate.msg"
+        "msg/ZEstimate.msg"
+        "msg/ZDebugEstimate.msg"
+        "msg/XYZEstimate.msg"
+        "msg/XYZDebugEstimate.msg"
+        "msg/SyncVerifyEstimates.msg"
+        "msg/SyncEstimateError.msg"
+        "srv/GpsPosition.srv"
+        DEPENDENCIES builtin_interfaces std_msgs geometry_msgs
 )
 
 
-add_service_files(
-   FILES
-   GpsPosition.srv
-   )
+include_directories(${EIGEN_INCLUDE_DIRS})
 
-generate_messages(
-        DEPENDENCIES
-        geometry_msgs
-        std_msgs
-)
-
-catkin_package(
-        INCLUDE_DIRS include
-        LIBRARIES ${PROJECT_NAME}
-        CATKIN_DEPENDS roscpp rospy geometry_msgs std_msgs message_runtime
-        DEPENDS EIGEN3
-)
-
-include_directories(include ${catkin_INCLUDE_DIRS}
-        ${EIGEN_INCLUDE_DIRS})
-
-add_library(reef_msgs
-            src/dynamics.cpp
-            include/reef_msgs/dynamics.h
-            include/reef_msgs/matrix_operation.h
-            src/matrix_operation.cpp
-            include/reef_msgs/AngleRepresentationInterface.h
-            src/AngleRepresentationInterface.cpp
+add_library(lib_reef_msgs
+        src/dynamics.cpp
+        include/reef_msgs/dynamics.h
+        include/reef_msgs/matrix_operation.h
+        src/matrix_operation.cpp
+        include/reef_msgs/AngleRepresentationInterface.h
+        src/AngleRepresentationInterface.cpp
         include/reef_msgs/ReefObjectConversion.h
-            src/Quaternion.cpp
-            include/reef_msgs/Quaternion.h
-            src/EulerAngle.cpp include/reef_msgs/EulerAngle.h
-            src/RodriguezParameter.cpp
-            include/reef_msgs/RodriguezParameter.h
-            src/AxisAngle.cpp
-            include/reef_msgs/AxisAngle.h
-            src/DCM.cpp include/reef_msgs/DCM.h
-            src/RotationMatrix.cpp
-            include/reef_msgs/RotationMatrix.h
-        include/reef_msgs/ReefMsgsConversionAPI.h src/OdomNWU2PoseStampedNEDNode.cpp)
+        src/Quaternion.cpp
+        include/reef_msgs/Quaternion.h
+        src/EulerAngle.cpp include/reef_msgs/EulerAngle.h
+        src/RodriguezParameter.cpp
+        include/reef_msgs/RodriguezParameter.h
+        src/AxisAngle.cpp
+        include/reef_msgs/AxisAngle.h
+        src/DCM.cpp include/reef_msgs/DCM.h
+        src/RotationMatrix.cpp
+        include/reef_msgs/RotationMatrix.h
+        include/reef_msgs/ReefMsgsConversionAPI.h)
 
-add_dependencies(reef_msgs reef_msgs_generate_messages_cpp)
+ament_target_dependencies(lib_reef_msgs rclcpp tf2)
 
-#add_subdirectory(test)
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(reef_msgs ${catkin_LIBRARIES})
 
 add_executable(OdomNWU2PoseStampedNED_node
         src/OdomNWU2PoseStampedNEDNode.cpp
         )
+ament_target_dependencies(OdomNWU2PoseStampedNED_node rclcpp geometry_msgs nav_msgs)
 
-target_link_libraries(OdomNWU2PoseStampedNED_node ${catkin_LIBRARIES})
+
+ament_package()
+
+install(TARGETS
+        OdomNWU2PoseStampedNED_node
+        DESTINATION lib/${PROJECT_NAME}
+        )
+
+#install(DIRECTORY
+#        launch
+#        DESTINATION share/${PROJECT_NAME}
+#        )
+

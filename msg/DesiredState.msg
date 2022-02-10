@@ -4,7 +4,7 @@
 # When trajectories are used, velocities and accelerations provide feed forward terms
 #   to the controller.
 
-Header header
+std_msgs/Header header
 uint32 node_id
 DesiredVector pose
 DesiredVector velocity

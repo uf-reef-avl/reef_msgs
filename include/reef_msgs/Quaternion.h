@@ -67,7 +67,7 @@ namespace reef_msgs{
         @param[in] _q  Eigen quaternion (x,y,z,w)
         @return a 3*3 rotation matrix which corresponds to the quaternion representation as input
         */
-      static auto  quaternionToRotation(geometry_msgs::Quaternion q) -> Eigen::Matrix3d;
+      static auto  quaternionToRotation(geometry_msgs::msg::Quaternion q) -> Eigen::Matrix3d;
         /*!
       @brief Transform a eigen 3*3 direction cosine matrix into a eigen 4d vector quaternion
       @param[in] _q  Geometry_msgs quaternion (x,y,z,w)

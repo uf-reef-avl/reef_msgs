@@ -2,7 +2,7 @@
 // Created by paulbuzaud on 9/17/20.
 //
 
-#include "reef_msgs/Quaternion.h"
+#include "../include/reef_msgs/Quaternion.h"
 
 
 namespace reef_msgs {
@@ -78,7 +78,7 @@ namespace reef_msgs {
         return rotation_matrix;
     }
 
-    auto Quaternion::quaternionToRotation(geometry_msgs::Quaternion q) -> Eigen::Matrix3d {
+    auto Quaternion::quaternionToRotation(geometry_msgs::msg::Quaternion q) -> Eigen::Matrix3d {
         Eigen::Quaterniond q_temp;
         q_temp.x() = q.x;
         q_temp.y() = q.y;
@@ -271,7 +271,6 @@ namespace reef_msgs {
             q(1, 0) = (_m(1, 2) + _m(2, 1)) / d;
         }
         q.normalize();
-
         return q;
     }
 
@@ -364,7 +363,7 @@ namespace reef_msgs {
         return Psi;
     }
 
-    Quaternion::Quaternion(const Quaternion &_other) {
+    Quaternion::Quaternion(const Quaternion &_other):AngleRepresentationInterface(_other) {
         m_q = _other.getQuaternion();
     }
 
@@ -381,6 +380,7 @@ namespace reef_msgs {
 
     Quaternion &Quaternion::operator=(const Quaternion &_other) {
         m_q = _other.getQuaternion();
+        return *this;
     }
 
 

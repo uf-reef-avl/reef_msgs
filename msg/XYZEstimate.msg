@@ -1,4 +1,4 @@
-Header header
+std_msgs/Header header
 uint32 node_id
 
 XYEstimate xy_plus

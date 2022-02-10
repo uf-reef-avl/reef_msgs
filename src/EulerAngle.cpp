@@ -6,7 +6,7 @@
 
 
 namespace reef_msgs {
-    EulerAngle::EulerAngle(const EulerAngle &_other) {
+    EulerAngle::EulerAngle(const EulerAngle &_other):AngleRepresentationInterface(_other) {
         m_EA = _other.getEulerAngle();
         m_eulerTransformation = _other.getEulerTransformation();
     }
@@ -351,6 +351,7 @@ namespace reef_msgs {
     EulerAngle & EulerAngle::operator=(const EulerAngle & _other) {
         m_EA = _other.getEulerAngle();
         m_eulerTransformation = _other.getEulerTransformation();
+        return *this;
     }
 
     std::ostream & operator<<(std::ostream &os, const EulerAngle &_inst) {
@@ -358,4 +359,3 @@ namespace reef_msgs {
         return os;
     }
 }
-#include "reef_msgs/EulerAngle.h"

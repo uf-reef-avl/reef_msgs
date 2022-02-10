@@ -21,7 +21,7 @@ void roll_pitch_yaw_from_quaternion(Eigen::Quaterniond q, double &phi, double &t
   Eigen::Matrix<double, 4,1> q_mat(q.x(), q.y(), q.z(), q.w());
   roll_pitch_yaw_from_quaternion(q_mat, phi, theta, psi);
 }
-void roll_pitch_yaw_from_quaternion(geometry_msgs::Quaternion q, double &phi, double &theta, double &psi)
+void roll_pitch_yaw_from_quaternion(geometry_msgs::msg::Quaternion q, double &phi, double &theta, double &psi)
 {
   Eigen::Matrix<double, 4,1> q_mat(q.x, q.y, q.z, q.w);
   roll_pitch_yaw_from_quaternion(q_mat, phi, theta, psi);
@@ -54,7 +54,7 @@ void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, Eigen:
   q.y() = quat_mat(2);
   q.z() = quat_mat(3);
 }
-void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geometry_msgs::Quaternion& q)
+void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geometry_msgs::msg::Quaternion& q)
 {
   Eigen::Matrix<double,4,1> quat_mat = quaternion_from_roll_pitch_yaw(phi,  theta,  psi);
 
@@ -75,7 +75,7 @@ Eigen::Matrix3d quaternion_to_rotation(Eigen::Quaterniond q)
   return rotation_matrix;
 }
 
-Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q)
+Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::msg::Quaternion q)
 {
   Eigen::Quaterniond q_temp;
   q_temp.x() = q.x;

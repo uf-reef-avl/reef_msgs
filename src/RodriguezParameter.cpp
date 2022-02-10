@@ -2,8 +2,8 @@
 // Created by paul on 10/5/20.
 //
 
-#include "reef_msgs/RodriguezParameter.h"
-#include "reef_msgs/Quaternion.h"
+#include "../include/reef_msgs/RodriguezParameter.h"
+#include "../include/reef_msgs/Quaternion.h"
 
 namespace reef_msgs {
 

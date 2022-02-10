@@ -88,10 +88,10 @@ namespace reef_msgs {
     auto AxisAngle::toPrincipalRotationElement() -> Eigen::Matrix<double, 4, 1> {
         //we use another convention for this
         Eigen::Matrix<double, 4, 1> q;
-        q(0,0) = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(3, 0)*m_axisAngle(3, 0)) ;
-        q(1,0) = m_axisAngle(3, 0) / q(0,0);
-        q(2,0) = m_axisAngle(0, 0) / q(0,0);
-        q(3,0) = m_axisAngle(1, 0) / q(0,0);
+        q(0,0) = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(2, 0)*m_axisAngle(2, 0)) ;
+        q(1,0) = m_axisAngle(0, 0) / q(0,0);
+        q(2,0) = m_axisAngle(1, 0) / q(0,0);
+        q(3,0) = m_axisAngle(2, 0) / q(0,0);
         return q;
     }
 
@@ -109,7 +109,7 @@ namespace reef_msgs {
         Eigen::Matrix<double, 4, 1> q;
         auto q1 = toPrincipalRotationElement();
         auto sp = sin(q1(0, 0) / 2);
-        //rework this hackich way to recreate proper quaternion convention (x,y,z,w) instead of (w,x,y,z)
+        //Todo rework this hackich way to recreate proper quaternion convention (x,y,z,w) instead of (w,x,y,z)
         q(3, 0) = cos(q1(0, 0) / 2);
         q(0, 0) = q1(1, 0) * sp;
         q(1, 0) = q1(2, 0) * sp;
@@ -130,10 +130,10 @@ namespace reef_msgs {
     }
 
     auto AxisAngle::toDCM() -> Eigen::Matrix3d {
-        auto q0 = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(3, 0)*m_axisAngle(3, 0)) ;
-        auto q1 = m_axisAngle(3, 0) / q0;
-        auto q2 = m_axisAngle(0, 0) / q0;
-        auto q3 = m_axisAngle(1, 0) / q0;
+        auto q0 = sqrt(m_axisAngle(0, 0)*m_axisAngle(0, 0) + m_axisAngle(1, 0)*m_axisAngle(1, 0) + m_axisAngle(2, 0)*m_axisAngle(2, 0)) ;
+        auto q1 = m_axisAngle(0, 0) / q0;
+        auto q2 = m_axisAngle(1, 0) / q0;
+        auto q3 = m_axisAngle(2, 0) / q0;
 
         auto cp = cos(q0);
         auto sp = sin(q0);

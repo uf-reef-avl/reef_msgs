@@ -7,23 +7,22 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
-#include <ros/ros.h>
-#include <tf/tf.h>
-#include <geometry_msgs/Quaternion.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <geometry_msgs/msg/quaternion.hpp>
 
 namespace reef_msgs
 {
 
 void roll_pitch_yaw_from_quaternion(Eigen::Matrix<double,4,1>q, double &phi, double &theta, double &psi);
 void roll_pitch_yaw_from_quaternion(Eigen::Quaterniond q, double &phi, double &theta, double &psi);
-void roll_pitch_yaw_from_quaternion(geometry_msgs::Quaternion q, double &phi, double &theta, double &psi);
+void roll_pitch_yaw_from_quaternion(geometry_msgs::msg::Quaternion q, double &phi, double &theta, double &psi);
 
 Eigen::Matrix<double,4,1> quaternion_from_roll_pitch_yaw(double phi, double theta, double psi);
 void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, Eigen::Quaterniond& q);
-void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geometry_msgs::Quaternion& q);
+void quaternion_from_roll_pitch_yaw(double phi, double theta, double psi, geometry_msgs::msg::Quaternion& q);
 
 Eigen::Matrix3d quaternion_to_rotation(Eigen::Quaterniond q);
-Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::Quaternion q);
+Eigen::Matrix3d quaternion_to_rotation(geometry_msgs::msg::Quaternion q);
 
 Eigen::Matrix3d roll_pitch_yaw_to_rotation_321(double roll, double pitch, double yaw);
 Eigen::Matrix3d DCM_from_Euler321(const Eigen::Vector3d rpy);
@@ -56,7 +55,7 @@ inline double get_yaw(Eigen::Quaterniond q)
     return std::atan2(2.0*(q.w()*q.z()+q.x()*q.y()), 1.0-2.0*(q.y()*q.y() + q.z()*q.z()));
   }
 
-inline double get_yaw(geometry_msgs::Quaternion q)
+inline double get_yaw(geometry_msgs::msg::Quaternion q)
 {
   return std::atan2(2.0*(q.w*q.z+q.x*q.y), 1.0-2.0*(q.y*q.y + q.z*q.z));
 }

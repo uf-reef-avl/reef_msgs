@@ -15,7 +15,7 @@ namespace reef_msgs {
         m_DCM = _DCM;
     }
 
-    DCM::DCM(const DCM &_other) {
+    DCM::DCM(const DCM &_other):AngleRepresentationInterface(_other) {
         m_DCM = _other.m_DCM;
     }
 
@@ -194,6 +194,7 @@ namespace reef_msgs {
 
     DCM &DCM::operator=(const DCM &_other) {
         m_DCM = _other.m_DCM;
+        return *this;
     }
 
     std::ostream &operator<<(std::ostream &os, const DCM &_inst) {
@@ -205,5 +206,3 @@ namespace reef_msgs {
         return os;
     }
 }
-
-#include "reef_msgs/DCM.h"

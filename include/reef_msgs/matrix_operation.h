@@ -6,8 +6,9 @@
 #define PROJECT_MATRIX_OPERATION_H
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
-#include <ros/ros.h>
-#include <tf/tf.h>
+#include "rclcpp/rclcpp.hpp"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/transform_datatypes.h>
 
 namespace reef_msgs
 {
@@ -38,34 +39,34 @@ void vectorToDiagMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec
   }
 }
 
-template <class Derived>
-void importMatrixFromParamServer(const ros::NodeHandle nh, Eigen::MatrixBase<Derived>& mat, std::string param)
-{
-  std::vector<double> vec;
-  if(!nh.getParam(param, vec))
-  {
-    ROS_WARN("Could not find %s/%s on server. Zeros!",nh.getNamespace().c_str(),param.c_str());
-    mat.setZero();
-    return;
-  }
-  else if(vec.size() == mat.rows()*mat.cols())
-  {
-    //ROS_WARN("Reading %s/%s from server. (Full)",nh.getNamespace().c_str(),param.c_str());
-    vectorToMatrix(mat,vec);
-  }
-  else if(vec.size() == mat.rows())
-  {
-    //ROS_WARN("Reading %s/%s from server. (Diagonal)",nh.getNamespace().c_str(),param.c_str());
-    vectorToDiagMatrix(mat,vec);
-  }
-  else
-  {
-    ROS_ERROR("Param %s/%s is the wrong size. %f not %f or %f" ,nh.getNamespace().c_str(),param.c_str(),(double) vec.size(),(double) mat.rows(),(double) mat.rows()*mat.cols());
-  }
-}
+//template <class Derived>
+//void importMatrixFromParamServer(const ros::NodeHandle nh, Eigen::MatrixBase<Derived>& mat, std::string param)
+//{
+//  std::vector<double> vec;
+//  if(!nh.getParam(param, vec))
+//  {
+//    ROS_WARN("Could not find %s/%s on server. Zeros!",nh.getNamespace().c_str(),param.c_str());
+//    mat.setZero();
+//    return;
+//  }
+//  else if(vec.size() == mat.rows()*mat.cols())
+//  {
+//    //ROS_WARN("Reading %s/%s from server. (Full)",nh.getNamespace().c_str(),param.c_str());
+//    vectorToMatrix(mat,vec);
+//  }
+//  else if(vec.size() == mat.rows())
+//  {
+//    //ROS_WARN("Reading %s/%s from server. (Diagonal)",nh.getNamespace().c_str(),param.c_str());
+//    vectorToDiagMatrix(mat,vec);
+//  }
+//  else
+//  {
+//    ROS_ERROR("Param %s/%s is the wrong size. %f not %f or %f" ,nh.getNamespace().c_str(),param.c_str(),(double) vec.size(),(double) mat.rows(),(double) mat.rows()*mat.cols());
+//  }
+//}
 
 template <class Derived, std::size_t N>
-bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, boost::array<double,N> &vec)
+bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, std::array<double,N> &vec)
 {
   ROS_ASSERT(vec.size() == mat.rows()*mat.cols());
   if(vec.size() != mat.rows()*mat.cols())
@@ -87,7 +88,7 @@ void verifyDimensions(const Eigen::MatrixBase<Derived> &mat, std::string name, i
                   "%s is %dx%d. Expecting %dx%d",name.c_str(),(int) mat.rows(), (int) mat.cols(),rows,cols);
 }
 
-inline Eigen::Affine3d tf2Eigen(const tf::StampedTransform transform)
+inline Eigen::Affine3d tf2Eigen(const tf2::Stamped<tf2::Transform> transform)
 {
     Eigen::Affine3d temp;
     temp.translation() << transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z();
