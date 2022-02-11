@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(reef_msgs)
 
+set(LIB_NAME lib_reef_msgs)
+
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
    set(CMAKE_C_STANDARD 99)
@@ -56,7 +58,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 
-add_library(lib_reef_msgs
+add_library(${LIB_NAME} SHARED
         src/dynamics.cpp
         include/reef_msgs/dynamics.h
         include/reef_msgs/matrix_operation.h
@@ -76,7 +78,22 @@ add_library(lib_reef_msgs
         include/reef_msgs/RotationMatrix.h
         include/reef_msgs/ReefMsgsConversionAPI.h)
 
-ament_target_dependencies(lib_reef_msgs rclcpp tf2)
+ament_target_dependencies(${LIB_NAME} rclcpp tf2)
+ament_export_targets(${LIB_NAME} HAS_LIBRARY_TARGET)
+
+
+install(
+        TARGETS ${LIB_NAME}
+        EXPORT ${LIB_NAME}
+        LIBRARY DESTINATION lib/${PROJECT_NAME}
+        ARCHIVE DESTINATION lib/${PROJECT_NAME}
+        RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+        DIRECTORY include/
+        DESTINATION include
+)
 
 
 add_executable(OdomNWU2PoseStampedNED_node
@@ -84,13 +101,14 @@ add_executable(OdomNWU2PoseStampedNED_node
         )
 ament_target_dependencies(OdomNWU2PoseStampedNED_node rclcpp geometry_msgs nav_msgs)
 
-
-ament_package()
-
 install(TARGETS
         OdomNWU2PoseStampedNED_node
         DESTINATION lib/${PROJECT_NAME}
         )
+
+ament_export_dependencies(rosidl_default_runtime)
+ 
+ament_package()
 
 #install(DIRECTORY
 #        launch
