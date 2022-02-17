@@ -39,31 +39,34 @@ void vectorToDiagMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec
   }
 }
 
-//template <class Derived>
-//void importMatrixFromParamServer(const ros::NodeHandle nh, Eigen::MatrixBase<Derived>& mat, std::string param)
-//{
-//  std::vector<double> vec;
-//  if(!nh.getParam(param, vec))
-//  {
-//    ROS_WARN("Could not find %s/%s on server. Zeros!",nh.getNamespace().c_str(),param.c_str());
-//    mat.setZero();
-//    return;
-//  }
-//  else if(vec.size() == mat.rows()*mat.cols())
-//  {
-//    //ROS_WARN("Reading %s/%s from server. (Full)",nh.getNamespace().c_str(),param.c_str());
-//    vectorToMatrix(mat,vec);
-//  }
-//  else if(vec.size() == mat.rows())
-//  {
-//    //ROS_WARN("Reading %s/%s from server. (Diagonal)",nh.getNamespace().c_str(),param.c_str());
-//    vectorToDiagMatrix(mat,vec);
-//  }
-//  else
-//  {
-//    ROS_ERROR("Param %s/%s is the wrong size. %f not %f or %f" ,nh.getNamespace().c_str(),param.c_str(),(double) vec.size(),(double) mat.rows(),(double) mat.rows()*mat.cols());
-//  }
-//}
+template <class Derived>
+void importMatrixFromParamServer(const rclcpp::Node &_node, Eigen::MatrixBase<Derived>& mat, std::string param)
+{
+  std::vector<double> vec;
+
+  rclcpp::Parameter vecParam;
+  if(!_node.get_parameter(param, vecParam))
+  {
+      RCLCPP_WARN_STREAM(_node.get_logger(),"Could not find"<< _node.get_name()<<"/"<<param<<" on server. Zeros!");
+    mat.setZero();
+    return;
+  }
+  vec =  vecParam.as_double_array();
+  if(vec.size() == mat.rows()*mat.cols())
+  {
+    //ROS_WARN("Reading %s/%s from server. (Full)",nh.getNamespace().c_str(),param.c_str());
+    vectorToMatrix(mat,vec);
+  }
+  else if(vec.size() == mat.rows())
+  {
+    //ROS_WARN("Reading %s/%s from server. (Diagonal)",nh.getNamespace().c_str(),param.c_str());
+    vectorToDiagMatrix(mat,vec);
+  }
+  else
+  {
+      RCLCPP_ERROR_STREAM(_node.get_logger(),"Param"<< _node.get_name()<<"/"<<param<<" is the wrong size. "<< vec.size() << " not "<<mat.rows() << " or "<< mat.rows()*mat.cols());
+  }
+}
 
 template <class Derived, std::size_t N>
 bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, std::array<double,N> &vec)
@@ -101,9 +104,9 @@ inline Eigen::Affine3d tf2Eigen(const tf2::Stamped<tf2::Transform> transform)
 
 
 bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec);
-bool loadTransform(std::string ns, Eigen::Affine3d &out);
-bool loadTransform(std::string ns, Eigen::Matrix4d &out);
-bool loadTransform(std::string ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
+bool loadTransform(const rclcpp::Node &node, Eigen::Affine3d &out);
+bool loadTransform(const rclcpp::Node &node, Eigen::Matrix4d &out);
+bool loadTransform(const rclcpp::Node &node, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
 }
 
 
