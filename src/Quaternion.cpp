@@ -112,10 +112,10 @@ namespace reef_msgs {
         Eigen::Matrix<double, 4, 1> axisAngle;
         double p = 2 * acos(this->w());
         double sp = sin(p / 2);
-        double angle = this->x() / sp * p;
-        double x = this->y() / sp * p;
-        double y = this->z() / sp * p;
-        double z = sqrt(1 - x*x - y*y);
+        double x = this->x() / sp * p;
+        double y = this->y() / sp * p;
+        double z = this->z() / sp * p;
+        double angle = sqrt(1 - x*x - y*y);
         axisAngle << x, y, z, angle;
         return axisAngle;
     }
