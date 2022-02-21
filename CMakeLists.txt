@@ -78,7 +78,7 @@ add_library(${LIB_NAME} SHARED
         include/reef_msgs/RotationMatrix.h
         include/reef_msgs/ReefMsgsConversionAPI.h)
 
-ament_target_dependencies(${LIB_NAME} rclcpp tf2)
+ament_target_dependencies(${LIB_NAME} rclcpp tf2 Eigen3)
 ament_export_targets(${LIB_NAME} HAS_LIBRARY_TARGET)
 
 

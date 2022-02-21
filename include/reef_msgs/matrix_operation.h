@@ -9,13 +9,15 @@
 #include "rclcpp/rclcpp.hpp"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2/transform_datatypes.h>
+#include <cassert>
+#define assertm(exp, msg) assert(((void)msg, exp))
 
 namespace reef_msgs
 {
 template <class Derived>
 bool vectorToMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec)
 {
-  ROS_ASSERT(vec.size() == mat.rows()*mat.cols());
+  assertm(vec.size() == mat.rows()*mat.cols(),"Vector size is not equal to matrix size");
   if(vec.size() != mat.rows()*mat.cols())
     return false;
   for(unsigned i=0; i < mat.rows(); i++)
@@ -31,7 +33,7 @@ bool vectorToMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec)
 template <class Derived>
 void vectorToDiagMatrix(Eigen::MatrixBase<Derived>& mat, std::vector<double> vec)
 {
-  ROS_ASSERT(vec.size() == mat.rows());
+    assertm(vec.size() == mat.rows(),"Vector size is not equal to matrix row size");
   mat.setZero();
   for(unsigned i=0; i < mat.rows(); i++)
   {
@@ -71,7 +73,7 @@ void importMatrixFromParamServer(const rclcpp::Node &_node, Eigen::MatrixBase<De
 template <class Derived, std::size_t N>
 bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, std::array<double,N> &vec)
 {
-  ROS_ASSERT(vec.size() == mat.rows()*mat.cols());
+    assertm(vec.size() == mat.rows()*mat.cols(),"Vector size is not equal to matrix size");
   if(vec.size() != mat.rows()*mat.cols())
     return false;
   for(size_t i=0; i < mat.rows(); i++)
@@ -87,8 +89,7 @@ bool matrixToArray(const Eigen::MatrixBase<Derived> &mat, std::array<double,N> &
 template <class Derived>
 void verifyDimensions(const Eigen::MatrixBase<Derived> &mat, std::string name, int rows, int cols)
 {
-  ROS_ASSERT_MSG( mat.rows() == rows &&  mat.cols() == cols ,
-                  "%s is %dx%d. Expecting %dx%d",name.c_str(),(int) mat.rows(), (int) mat.cols(),rows,cols);
+    assertm( mat.rows() == rows &&  mat.cols() == cols ,"Invalid matrix dimensions");
 }
 
 inline Eigen::Affine3d tf2Eigen(const tf2::Stamped<tf2::Transform> transform)
@@ -104,9 +105,9 @@ inline Eigen::Affine3d tf2Eigen(const tf2::Stamped<tf2::Transform> transform)
 
 
 bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec);
-bool loadTransform(const rclcpp::Node &node, Eigen::Affine3d &out);
-bool loadTransform(const rclcpp::Node &node, Eigen::Matrix4d &out);
-bool loadTransform(const rclcpp::Node &node, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
+bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Affine3d &out);
+bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Matrix4d &out);
+bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
 }
 
 

@@ -16,8 +16,8 @@ namespace reef_msgs{
     /*!
     @brief Generate a reef_msgs quaternion from differents type of messages
     @param[in] msgs the msgs to be turn into a reef_msgs quaternion. Right now, the type supported are:
-     geometry_msgs::Quaternion,
-     geometry_msgs::QuaternionStamped,
+     geometry_msgs::msg::Quaternion,
+     geometry_msgs::msg::QuaternionStamped,
      Eigen::Quaterniond,
      Eigen::Matrix<double,4, 1>,
      Eigen::Vector4d ,
@@ -26,19 +26,19 @@ namespace reef_msgs{
      std::vector<double>,
      std::vector<float>,
      tf2::Quaternion,
-     geometry_msgs::Transform,
-     geometry_msgs::TransformStamped,
+     geometry_msgs::msg::Transform,
+     geometry_msgs::msg::TransformStamped,
     @return the reef_mgs quaternion instancy created
     */
     template<class T>
     reef_msgs::Quaternion fromAnyTypeToQuaternion(const T &_msgs ){
         double x,y,z,w;
-        if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
+        if constexpr(std::is_same<geometry_msgs::msg::Quaternion, T>::value) {
             x = _msgs.x;
             y = _msgs.y;
             z = _msgs.z;
             w = _msgs.w;
-        } else if constexpr(std::is_same<geometry_msgs::QuaternionStamped, T>::value) {
+        } else if constexpr(std::is_same<geometry_msgs::msg::QuaternionStamped, T>::value) {
             x = _msgs.quaternion.x;
             y = _msgs.quaternion.y;
             z = _msgs.quaternion.z;
@@ -68,12 +68,12 @@ namespace reef_msgs{
             y = _msgs.y();
             z = _msgs.w();
             w = _msgs.z();
-        }else if constexpr(std::is_same<geometry_msgs::Transform, T>::value) {
+        }else if constexpr(std::is_same<geometry_msgs::msg::Transform, T>::value) {
             x = _msgs.rotation.x;
             y = _msgs.rotation.y;
             z = _msgs.rotation.z;
             w = _msgs.rotation.w;
-        }else if constexpr(std::is_same<geometry_msgs::TransformStamped, T>::value) {
+        }else if constexpr(std::is_same<geometry_msgs::msg::TransformStamped, T>::value) {
             x = _msgs.transform.rotation.x;
             y = _msgs.transform.rotation.y;
             z = _msgs.transform.rotation.z;
@@ -142,8 +142,8 @@ namespace reef_msgs{
     /*!
     @brief Generate a reef_msgs euler angle from differents type of messages
     @param[in] msgs the msgs to be turn into a reef_msgs euler angle. Right now, the type supported are:
-     geometry_msgs::Vector3,
-     geometry_msgs::Vector3Stamped,
+     geometry_msgs::msg::Vector3,
+     geometry_msgs::msg::Vector3Stamped,
      Eigen::Matrix<double,3, 1>,
      Eigen::Matrix<float,3, 1>,
      Eigen::Vector3d,
@@ -154,11 +154,11 @@ namespace reef_msgs{
     template<class T>
     reef_msgs::EulerAngle fromAnyTypeToEulerAngle(const T &_msgs , const std::string &_eulerTransformation){
         double yaw,pitch,roll;
-        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+        if constexpr(std::is_same<geometry_msgs::msg::Vector3 , T>::value){
             yaw = _msgs.x;
             pitch = _msgs.y;
             roll = _msgs.z;
-        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped, T>::value) {
+        }else if constexpr(std::is_same<geometry_msgs::msg::Vector3Stamped, T>::value) {
             yaw = _msgs.vector.x;
             pitch = _msgs.vector.y;
             roll = _msgs.vector.z;
@@ -183,8 +183,8 @@ namespace reef_msgs{
     /*!
     @brief Generate a reef_msgs rodriguez parameter from differents type of messages
     @param[in] msgs the msgs to be turn into a reef_msgs rodriguez parameter angle. Right now, the type supported are:
-     geometry_msgs::Vector3,
-     geometry_msgs::Vector3Stamped,
+     geometry_msgs::msg::Vector3,
+     geometry_msgs::msg::Vector3Stamped,
      Eigen::Matrix<double,3, 1>,
      Eigen::Matrix<float,3, 1>,
      Eigen::Vector3d,
@@ -197,11 +197,11 @@ namespace reef_msgs{
     template<class T>
     reef_msgs::RodriguezParameter fromAnyTypeToRodriguezParameter(const T &_msgs ){
         double x,y,z;
-        if constexpr(std::is_same<geometry_msgs::Vector3 , T>::value){
+        if constexpr(std::is_same<geometry_msgs::msg::Vector3 , T>::value){
             x = _msgs.x;
             y = _msgs.y;
             z = _msgs.z;
-        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
+        }else if constexpr(std::is_same<geometry_msgs::msg::Vector3Stamped , T>::value) {
             x = _msgs.vector.x;
             y = _msgs.vector.y;
             z = _msgs.vector.z;
@@ -248,8 +248,8 @@ namespace reef_msgs{
     @brief transform a reef_msgs quaternion to another possible quaternion c++ type
     @param[in] _Quaternion the quaternion to be transformed
     @return the c++ type returned . Right now, the type supported are:
-    geometry_msgs::Quaternion,
-    geometry_msgs::QuaternionStamped,
+    geometry_msgs::msg::Quaternion,
+    geometry_msgs::msg::QuaternionStamped,
     Eigen::Quaterniond,
     Eigen::Matrix<double,4, 1>,
     Eigen::Vector4d ,
@@ -258,20 +258,20 @@ namespace reef_msgs{
     std::vector<double>,
     std::vector<float>,
     tf2::Quaternion,
-    geometry_msgs::Transform,
-    geometry_msgs::TransformStamped,
+    geometry_msgs::msg::Transform,
+    geometry_msgs::msg::TransformStamped,
     */
     template<class T>
     T fromQuaternionToAnyType(const reef_msgs::Quaternion &_Quaternion){
-        if constexpr(std::is_same<geometry_msgs::Quaternion, T>::value) {
-            geometry_msgs::Quaternion q;
+        if constexpr(std::is_same<geometry_msgs::msg::Quaternion, T>::value) {
+            geometry_msgs::msg::Quaternion q;
             q.x = _Quaternion.x();
             q.y = _Quaternion.y();
             q.z = _Quaternion.z();
             q.w = _Quaternion.w();
             return q;
-        } else if constexpr(std::is_same<geometry_msgs::QuaternionStamped, T>::value) {
-            geometry_msgs::QuaternionStamped q;
+        } else if constexpr(std::is_same<geometry_msgs::msg::QuaternionStamped, T>::value) {
+            geometry_msgs::msg::QuaternionStamped q;
             q.quaternion.x = _Quaternion.x();
             q.quaternion.y = _Quaternion.y();
             q.quaternion.z = _Quaternion.z();
@@ -307,18 +307,18 @@ namespace reef_msgs{
             q.push_back(_Quaternion.z());
             q.push_back(_Quaternion.w());
             return q;
-        }else if constexpr(std::is_same<tf::Quaternion, T>::value) {
-            tf::Quaternion q = tf::Quaternion(_Quaternion.x(),_Quaternion.y(),_Quaternion.z(),_Quaternion.w());
+        }else if constexpr(std::is_same<tf2::Quaternion, T>::value) {
+            tf2::Quaternion q = tf2::Quaternion(_Quaternion.x(),_Quaternion.y(),_Quaternion.z(),_Quaternion.w());
             return q;
-        }else if constexpr(std::is_same<geometry_msgs::Transform, T>::value) {
-            geometry_msgs::Transform q;
+        }else if constexpr(std::is_same<geometry_msgs::msg::Transform, T>::value) {
+            geometry_msgs::msg::Transform q;
             q.rotation.x = _Quaternion.x();
             q.rotation.y = _Quaternion.y();
             q.rotation.z = _Quaternion.z();
             q.rotation.w = _Quaternion.w();
             return q;
-        }else if constexpr(std::is_same<geometry_msgs::TransformStamped, T>::value) {
-            geometry_msgs::TransformStamped q;
+        }else if constexpr(std::is_same<geometry_msgs::msg::TransformStamped, T>::value) {
+            geometry_msgs::msg::TransformStamped q;
             q.transform.rotation.x = _Quaternion.x();
             q.transform.rotation.y = _Quaternion.y();
             q.transform.rotation.z = _Quaternion.z();
@@ -401,8 +401,8 @@ namespace reef_msgs{
     @brief transform a reef_msgs euler angle to another possible euler angle c++ type
     @param[in] _eulerAngle the eulerangle to be transformed
     @return the c++ type returned . Right now, the type supported are:
-     geometry_msgs::Vector3,
-    geometry_msgs::Vector3Stamped,
+     geometry_msgs::msg::Vector3,
+    geometry_msgs::msg::Vector3Stamped,
     Eigen::Matrix<double,3, 1>,
     Eigen::Vector3d ,
     Eigen::Matrix<float,3, 1>,
@@ -412,14 +412,14 @@ namespace reef_msgs{
     */
     template<class T>
     T fromEulerAngleToAnyType(const reef_msgs::EulerAngle &_eulerAngle){
-        if constexpr(std::is_same<geometry_msgs::Vector3, T>::value){
-            geometry_msgs::Vector3 outputAngle;
+        if constexpr(std::is_same<geometry_msgs::msg::Vector3, T>::value){
+            geometry_msgs::msg::Vector3 outputAngle;
             outputAngle.x = _eulerAngle.yaw();
             outputAngle.y = _eulerAngle.pitch();
             outputAngle.z = _eulerAngle.roll();
             return outputAngle;
-        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
-            geometry_msgs::Vector3Stamped outputAngle;
+        }else if constexpr(std::is_same<geometry_msgs::msg::Vector3Stamped , T>::value) {
+            geometry_msgs::msg::Vector3Stamped outputAngle;
             outputAngle.vector.x = _eulerAngle.yaw();
             outputAngle.vector.y = _eulerAngle.pitch();
             outputAngle.vector.z = _eulerAngle.roll();
@@ -449,8 +449,8 @@ namespace reef_msgs{
     @brief transform a reef_msgs Rodriguez parameter to another possible rodriguez parameter c++ type
     @param[in] _rodriguezParameter the rodriguez parameter to be transformed
     @return the c++ type returned.  Right now, the type supported are:
-     geometry_msgs::Vector3,
-     geometry_msgs::Vector3Stamped,
+     geometry_msgs::msg::Vector3,
+     geometry_msgs::msg::Vector3Stamped,
      Eigen::Matrix<double,3, 1>,
      Eigen::Matrix<float,3, 1>,
      Eigen::Vector3d,
@@ -460,14 +460,14 @@ namespace reef_msgs{
     */
     template<class T>
     T fromRodriguezParameterToAnyType(const reef_msgs::RodriguezParameter &_rodriguezParameter){
-        if constexpr(std::is_same<geometry_msgs::Vector3, T>::value){
-            geometry_msgs::Vector3 outputAngle;
+        if constexpr(std::is_same<geometry_msgs::msg::Vector3, T>::value){
+            geometry_msgs::msg::Vector3 outputAngle;
             outputAngle.x = _rodriguezParameter.x();
             outputAngle.y = _rodriguezParameter.y();
             outputAngle.z = _rodriguezParameter.z();
             return outputAngle;
-        }else if constexpr(std::is_same<geometry_msgs::Vector3Stamped , T>::value) {
-            geometry_msgs::Vector3Stamped outputAngle;
+        }else if constexpr(std::is_same<geometry_msgs::msg::Vector3Stamped , T>::value) {
+            geometry_msgs::msg::Vector3Stamped outputAngle;
             outputAngle.vector.x = _rodriguezParameter.x();
             outputAngle.vector.y = _rodriguezParameter.y();
             outputAngle.vector.z = _rodriguezParameter.z();
