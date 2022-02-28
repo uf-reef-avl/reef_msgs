@@ -85,9 +85,9 @@ ament_export_targets(${LIB_NAME} HAS_LIBRARY_TARGET)
 install(
         TARGETS ${LIB_NAME}
         EXPORT ${LIB_NAME}
-        LIBRARY DESTINATION lib/${PROJECT_NAME}
-        ARCHIVE DESTINATION lib/${PROJECT_NAME}
-        RUNTIME DESTINATION lib/${PROJECT_NAME}
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION lib
 )
 
 install(
