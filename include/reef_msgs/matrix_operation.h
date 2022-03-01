@@ -105,6 +105,9 @@ inline Eigen::Affine3d tf2Eigen(const tf2::Stamped<tf2::Transform> transform)
 
 
 bool matrixToVector(const Eigen::MatrixXd &mat, std::vector<double> &vec);
+bool declareAndLoadTransform(rclcpp::Node &node,const std::string & ns, Eigen::Affine3d &out);
+bool declareAndLoadTransform(rclcpp::Node &node,const std::string & ns, Eigen::Matrix4d &out);
+bool declareAndLoadTransform(rclcpp::Node &node,const std::string & ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
 bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Affine3d &out);
 bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Matrix4d &out);
 bool loadTransform(const rclcpp::Node &node,const std::string & ns, Eigen::Vector3d &out_vec, Eigen::Quaterniond &out_quat);
