@@ -29,6 +29,15 @@ add_message_files(
         XYZDebugEstimate.msg
         SyncVerifyEstimates.msg
         SyncEstimateError.msg
+        DetectedPlanes.msg
+        PlaneInfo.msg
+        RGB.msg
+        Vector.msg
+        Moment.msg
+        Pixel.msg
+        Set.msg
+        PointList.msg
+        ListPointList.msg
 )
 
 
