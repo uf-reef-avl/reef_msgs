@@ -21,6 +21,7 @@ add_message_files(
         DesiredVector.msg
         DesiredState.msg
         DeltaToVel.msg
+        LimCommPoseEstimate.msg
         XYEstimate.msg
         XYDebugEstimate.msg
         ZEstimate.msg
