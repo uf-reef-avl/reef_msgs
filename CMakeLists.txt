@@ -51,8 +51,15 @@ catkin_package(
         DEPENDS EIGEN3
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS}
-        ${EIGEN_INCLUDE_DIRS})
+catkin_package(
+	CATKIN_DEPENDS message_runtime
+) 
+
+include_directories(
+	include 
+	${catkin_INCLUDE_DIRS}
+        ${EIGEN_INCLUDE_DIRS}
+)
 
 add_library(reef_msgs
             src/dynamics.cpp
