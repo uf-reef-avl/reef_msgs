@@ -29,6 +29,7 @@ add_message_files(
         XYZDebugEstimate.msg
         SyncVerifyEstimates.msg
         SyncEstimateError.msg
+        MagSensorAndCorrected.msg
 )
 
 generate_messages(
